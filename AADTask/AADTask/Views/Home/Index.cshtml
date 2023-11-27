@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+   
+    <p>Email: @ViewData["name"] </p> 
+</div>
+
+
+@if (User.IsInRole("admin"))
+{
+    <p>User is a admin.</p>
+}
+@if (User.IsInRole("planner"))
+{
+    <p>User is a planner.</p>
+}
+
+
+<p>To get the complete JSON list of employees in DataTable, visit here https://localhost:7271/Home/JSONEmployeeData</p>
+
+<p>To get the complete list of employees in DataTable, visit here https://localhost:7271/Home/GetEmployeeData</p>
+
+

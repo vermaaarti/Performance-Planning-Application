@@ -1,0 +1,50 @@
+﻿@model List<AllEmployee>
+
+@{
+    ViewData["Title"] = "Employee_Data_List";
+}
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<!--Data Table-->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="~/js/employeeAdmin.js"></script>
+<script src="~/js/employeePlanning.js"></script>
+
+<button type="button" id="saveDataButton" onclick="SaveEmployee(event)" class="btn btn-info m-2">Save as Draft</button>
+
+@if (User.IsInRole("planner"))
+{
+    <button type="button" onclick="Submit(event)" class="btn btn-info m-2">Submit</button>
+}
+<!--<button type="button" onclick="Submit(event)" class="btn btn-info m-2">Submit</button>-->
+@if (User.IsInRole("admin"))
+{
+    <button type="button" onclick="AddNewEmployee(event)" class="btn btn-info m-2">Add New Employee</button>
+}
+
+<table id="dataTable" class="display" style="width:100%">
+
+    <thead>
+        <tr>
+           
+            <th>Employee Name</th>
+            <th>Employee Email</th>
+            <th>Manager Name</th>
+            <th>Planner Name</th>
+            <th>Department</th>
+            <th>Performance Rating</th>
+            <th> Status of Planning</th>
+        
+        </tr>
+    </thead>
+    <tbody>
+      
+    </tbody>
+</table>
+
+
+
+
+
+

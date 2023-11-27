@@ -1,0 +1,62 @@
+﻿
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+
+<!--Data Table-->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="~/js/employeeDetail.js"></script>
+
+
+@{
+    ViewData["Title"] = "Add_Update_Employee";
+}
+@model AllEmployee
+
+    
+   @* @Html.LabelFor(Model => Model.EmployeeId)
+    @Html.TextBoxFor(Model => Model.EmployeeId, new { @class = "form-control ", @id = "employeeId"})*@
+
+@Html.HiddenFor(Model => Model.EmployeeId, new { @id = "employeeId" })
+
+
+    @Html.LabelFor(Model => Model.EmployeeName)
+@Html.TextBoxFor(Model => Model.EmployeeName, new { @class = "form-control d-block ",  @id = "employeeName"})
+
+
+    @Html.LabelFor(Model => Model.EmployeeEmail)
+@Html.TextBoxFor(Model => Model.EmployeeEmail, new { @class = "form-control d-block ", @id = "employeeEmail"})
+
+
+    @Html.LabelFor(Model => Model.ManagerName)
+    @Html.DropDownListFor(Model => Model.ManagerName,
+        new SelectList(Enum.GetValues(typeof(Mngr))), "Select Manager", new { @class = "form-control " , @id = "managerName"})
+
+    @Html.LabelFor(Model => Model.Department)
+    @Html.DropDownListFor(Model => Model.Department,
+        new SelectList(Enum.GetValues(typeof(Dept))), "Select Department", new { @class = "form-control " , @id = "department"})
+
+    @Html.LabelFor(Model => Model.PlannerName)
+    @Html.DropDownListFor(Model => Model.PlannerName, new SelectList(Enum.GetValues(typeof(Plnr))),
+    "Select PlannerName", new { @class = "form-control ", @id = "plannerName"})
+ 
+  
+   @Html.HiddenFor(Model => Model.StatusOfPlanning, new { @id = "StatusOfPlanning" })
+
+
+
+
+<button type="submit" class="btn btn-primary my-3" id="bnttosubmitdata" onclick="SaveEmployeeDetails(event, @Model.EmployeeId)">Save Details</button>
+
+
+<script>
+    $(document).ready(function () {
+        // Get the value of the hidden field
+        var employeeStatusOfPlanningValue = $("#StatusOfPlanning").val();
+
+        // Check if the value is 'completed' and hide the button accordingly
+        if (employeeStatusOfPlanningValue === 'Completed') {
+            $("#bnttosubmitdata").hide();
+        }
+    });
+</script>
