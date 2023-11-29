@@ -1,6 +1,6 @@
 # Performance-Planning-Application
 
-An application to plan/track the performance of employees.
+An MVC application to plan/track the performance of employees.
 
 
 <h2>Performance Planning Application</h2>
