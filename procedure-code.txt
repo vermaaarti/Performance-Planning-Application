@@ -107,6 +107,7 @@ CREATE TABLE EmployeeMaster_arti (
     PerformanceRatingId INT,
     PerformanceRating NVARCHAR(255),
     StatusOfPlanning NVARCHAR(255),
+	performanceChallenges NVARCHAR(255),
     IsEligibleForPlanning INT,
     FOREIGN KEY (ManagerId) REFERENCES EmployeeMaster_arti(EmployeeId),
     FOREIGN KEY (PlannerId) REFERENCES EmployeeMaster_arti(EmployeeId),
@@ -114,7 +115,8 @@ CREATE TABLE EmployeeMaster_arti (
     CONSTRAINT ck_testbool_isadmin CHECK (IsAdmin IN (1, 0)),
     CONSTRAINT ck_testbool_isplneligible CHECK (IsEligibleForPlanning IN (1, 0)),
     CONSTRAINT ck_testbool_depart CHECK (Department IN ('CS', 'IT')),
-    CONSTRAINT ck_testbool_perfr CHECK (PerformanceRating IN ('Poor', 'Satisfactory', 'Good', 'Excellent'))
+    CONSTRAINT ck_testbool_perfr CHECK (PerformanceRating IN ('Poor', 'Satisfactory', 'Good', 'Excellent')),
+	CONSTRAINT ck_testbool_perch CHECK (performanceChallenges IN ('Training Required', 'Was/Is in PIP', 'No certification', 'No challenges'))
 );
 
 
@@ -122,17 +124,17 @@ CREATE TABLE EmployeeMaster_arti (
 drop table EmployeeMaster_arti
 
 
-insert into EmployeeMaster_arti(EmployeeEmail, EmployeeName, ManagerId, PlannerId, Department, IsAdmin, PerformanceRatingId,PerformanceRating, StatusOfPlanning, IsEligibleForPlanning)  
+insert into EmployeeMaster_arti(EmployeeEmail, EmployeeName, ManagerId, PlannerId, Department, IsAdmin, PerformanceRatingId, PerformanceRating, StatusOfPlanning, performanceChallenges, IsEligibleForPlanning)  
 values
-('aarti_verma@amicusglobal.com', 'Aarti', 2, 2, 'CS', 1, 1,'Poor', 'draft', 0),
-('ruchir_verma@amicusglobal.com', 'Ruchir', 4, 4, 'CS', 0, 2, 'Satisfactory', 'draft', 1),
-('sharma_srishti@amicusglobal.com', 'Srishti', 4, 4, 'IT', 0, 2, 'Poor', 'draft', 1),
-('ravi_kukreja@amicusglobal.com', 'Ravi', 4, 4, 'CS', 0, 4, 'Excellent', 'draft', 1),
-('chandan_soni@amicusglobal.com', 'Chandan',2, 2, 'IT', 0, 4,'Good', 'draft', 1) ,      
-('avartika_verma@amicusglobal.com', 'Avartika', 1, 1 , 'IT', 0, 2, 'Poor', 'draft', 1),
-('rachana_k@amicusglobal.com', 'Rachana', 9, 9 , 'CS', 0, 2, 'Good', 'draft', 1),
-('vivek_purbey@amicusglobal.com', 'Vivek', 9,9 , 'IT', 0, 3, 'Good', 'draft', 1),
-('yash_bakshi@amicusglobal.com', 'Yash', 5, 5, 'CS', 0, 2, 'Good', 'draft', 1)
+('aarti_verma@amicusglobal.com', 'Aarti', 2, 2, 'CS', 1, 1,'Poor', 'draft', 'Training Required', 0),
+('ruchir_verma@amicusglobal.com', 'Ruchir', 4, 4, 'CS', 0, 2, 'Satisfactory', 'draft','Was/Is in PIP', 1),
+('sharma_srishti@amicusglobal.com', 'Srishti', 4, 4, 'IT', 0, 2, 'Poor', 'draft','Training Required', 1),
+('ravi_kukreja@amicusglobal.com', 'Ravi', 4, 4, 'CS', 0, 4, 'Excellent', 'draft', 'Was/Is in PIP', 1),
+('chandan_soni@amicusglobal.com', 'Chandan',2, 2, 'IT', 0, 4,'Good', 'draft', 'Training Required', 1) ,      
+('avartika_verma@amicusglobal.com', 'Avartika', 1, 1 , 'IT', 0, 2, 'Poor', 'draft', 'Was/Is in PIP', 1),
+('rachana_k@amicusglobal.com', 'Rachana', 9, 9 , 'CS', 0, 2, 'Good', 'draft', 'Training Required', 1),
+('vivek_purbey@amicusglobal.com', 'Vivek', 9,9 , 'IT', 0, 3, 'Good', 'draft', 'Was/Is in PIP', 1),
+('yash_bakshi@amicusglobal.com', 'Yash', 5, 5, 'CS', 0, 2, 'Good', 'draft', 'Training Required', 1)
 
 
 select * from EmployeeMaster_arti
@@ -149,7 +151,7 @@ SET PerformanceRating = null
 --//////////////////procedure to get the employees based on admin or planner//////////////////////////////////////////////////////////////////////////////////////////////
 --////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-CREATE PROCEDURE [dbo].[procedureToGetEmployeeData_aartiB]
+CREATE PROCEDURE [dbo].[procedureToGetEmployeeData_aartiD]
 @Email NVARCHAR (255)
 AS
 BEGIN
@@ -173,6 +175,7 @@ BEGIN
                 WHERE  emp1.PlannerId = emp3.EmployeeId) AS PlannerName,
                Department,
                PerformanceRating,
+			   performanceChallenges,
                StatusOfPlanning
         FROM   EmployeeMaster_arti AS emp1;
     ELSE
@@ -187,10 +190,12 @@ BEGIN
                 WHERE  emp5.PlannerId = emp7.EmployeeId) AS PlannerName,
                Department,
                PerformanceRating,
+			   performanceChallenges,
                StatusOfPlanning
         FROM   EmployeeMaster_arti AS emp5
         WHERE  PlannerId = @id;
 END
+
 
 
 --////////////////////procedure to save data on database when submit button is clicked by the planner//////////////////////////////////////////////////////////////////////
@@ -201,8 +206,9 @@ CREATE PROCEDURE [dbo].[ChangeStatusToCompleted_a]
 AS
 BEGIN
     CREATE TABLE #TempTable_aarti (
-        EmployeeId       INT            PRIMARY KEY,
+        EmployeeId INT PRIMARY KEY,
         StatusOfPlanning NVARCHAR (255)
+
     );
     INSERT INTO #TempTable_aarti (EmployeeId, StatusOfPlanning)
     SELECT EmployeeId,
@@ -223,20 +229,24 @@ END
 --////////////////procedure to send the updated array to the database after changing the performance rating  /////////////////////////////////////////////////////////////
 --///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-CREATE PROCEDURE [dbo].[SaveEmployeeDatasAsDraft_arti]
+CREATE PROCEDURE [dbo].[SaveEmployeeDatasAsDraft_artiA]
 @JsonEmployee NVARCHAR (MAX)
 AS
 BEGIN
     CREATE TABLE #TempTable_aarti (
-        EmployeeId        INT            PRIMARY KEY,
-        PerformanceRating NVARCHAR (255)
+        EmployeeId  INT PRIMARY KEY,
+        PerformanceRating NVARCHAR (255) ,
+		performanceChallenges NVARCHAR (255)
+
     );
-    INSERT INTO #TempTable_aarti (EmployeeId, PerformanceRating)
+    INSERT INTO #TempTable_aarti (EmployeeId, PerformanceRating, performanceChallenges)
     SELECT EmployeeId,
-           PerformanceRating
-    FROM   OPENJSON (@JsonEmployee) WITH (EmployeeId INT '$.EmployeeId', PerformanceRating NVARCHAR (255) '$.PerformanceRating');
+           PerformanceRating,
+		   performanceChallenges
+    FROM   OPENJSON (@JsonEmployee) WITH (EmployeeId INT '$.EmployeeId', PerformanceRating NVARCHAR (255) '$.PerformanceRating', performanceChallenges NVARCHAR(255) '$.performanceChallenges');
     UPDATE ema
-    SET    ema.PerformanceRating = tt.PerformanceRating
+    SET    ema.PerformanceRating = tt.PerformanceRating ,
+	   ema.performanceChallenges = tt.performanceChallenges
     FROM   EmployeeMaster_arti AS ema
            INNER JOIN
            #TempTable_aarti AS tt
@@ -270,8 +280,7 @@ BEGIN
         @ManagerName = ManagerName,
         @Department = Department,
         @PlannerName = PlannerName
-    FROM OPENJSON(@EmpJson)
-    WITH (
+    FROM OPENJSON(@EmpJson) WITH (
         EmployeeId INT '$.EmployeeId',
         EmployeeName NVARCHAR(MAX) '$.EmployeeName',
         EmployeeEmail NVARCHAR(MAX) '$.EmployeeEmail',
@@ -285,17 +294,24 @@ BEGIN
     BEGIN
         -- Insert new record
         INSERT INTO EmployeeMaster_arti (EmployeeName, EmployeeEmail, ManagerId, PlannerId, Department, StatusOfPlanning)
-        VALUES (@EmployeeName, @EmployeeEmail, (SELECT EmployeeId FROM EmployeeMaster_arti WHERE EmployeeName = @ManagerName),
-                (SELECT EmployeeId FROM EmployeeMaster_arti WHERE EmployeeName = @PlannerName), @Department, 'draft');
+        VALUES (
+            @EmployeeName,
+            @EmployeeEmail,
+            NULLIF((SELECT EmployeeId FROM EmployeeMaster_arti WHERE EmployeeName = @ManagerName), 0),
+            NULLIF((SELECT EmployeeId FROM EmployeeMaster_arti WHERE EmployeeName = @PlannerName), 0),
+            @Department,
+            'draft'
+        );
     END
     ELSE
     BEGIN
         -- Update existing record
         UPDATE E
-        SET E.EmployeeName = @EmployeeName,
+        SET
+            E.EmployeeName = @EmployeeName,
             E.EmployeeEmail = @EmployeeEmail,
-            E.ManagerId = (SELECT EmployeeId FROM EmployeeMaster_arti WHERE EmployeeName = @ManagerName),
-            E.PlannerId = (SELECT EmployeeId FROM EmployeeMaster_arti WHERE EmployeeName = @PlannerName),
+            E.ManagerId = NULLIF((SELECT EmployeeId FROM EmployeeMaster_arti WHERE EmployeeName = @ManagerName), 0),
+            E.PlannerId = NULLIF((SELECT EmployeeId FROM EmployeeMaster_arti WHERE EmployeeName = @PlannerName), 0),
             E.Department = @Department
         FROM EmployeeMaster_arti AS E
         WHERE E.EmployeeId = @EmployeeId;
@@ -304,9 +320,11 @@ END
 
 
 
+
+
 --////////////////////////////////////////////////// execute //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-DECLARE @json NVARCHAR(MAX) = '{"EmployeeId": 0, "EmployeeName": "Johney", "EmployeeEmail": "john@example.com", "ManagerName": "Manager1", "Department": "IT", "PlannerName": "Planner1"}';
+DECLARE @json NVARCHAR(MAX) = '{"EmployeeId": 0, "EmployeeName": "Jonathan Doe", "EmployeeEmail": "john@example.com", "ManagerName": "Manager1", "Department": "IT", "PlannerName": "Planner1"}';
  
 EXEC [dbo].[InsertOrUpdateEmployee] @EmpJson = @json;
 

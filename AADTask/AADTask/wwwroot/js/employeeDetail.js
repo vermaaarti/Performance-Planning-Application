@@ -66,13 +66,13 @@ function SaveEmployeeDetails(event, employeeId) {
 
 function ValidateForm() {
 
-    employeeId = $("#employeeId").value;
-    employeeName = $("#employeeName").value;
-    employeeEmail = $("#employeeEmail").value;
-    managerName = $("#managerName").value;
-    department = $("#department").value;
-    plannerName = $("#plannerName").value;
-    StatusOfPlanning = $("#StatusOfPlanning").value;
+    employeeId = $("#employeeId")[0].value;
+    employeeName = $("#employeeName")[0].value;
+    employeeEmail = $("#employeeEmail")[0].value;
+    managerName = $("#managerName")[0].value;
+    department = $("#department")[0].value;
+    plannerName = $("#plannerName")[0].value;
+    StatusOfPlanning = $("#StatusOfPlanning")[0].value;
 
 
     obj = {

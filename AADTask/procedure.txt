@@ -1,0 +1,314 @@
+
+
+----------------------------------------------code to AAD authentication---------------------------------------------------------------
+create table employee_aarti(
+employeeid int primary key not null, 
+employeemail nvarchar(255) UNIQUE,
+employeename nvarchar(255),
+)
+
+
+create table role_aarti(
+roleid int primary key not null,
+rolename nvarchar(40)
+)
+
+create table employeeRole_aarti(
+employeeroleid int primary key not null,
+employeeid int,
+roleid int,
+FOREIGN KEY (employeeid) REFERENCES employee_aarti(employeeid),
+FOREIGN KEY (roleid) REFERENCES role_aarti(roleid)
+)
+
+
+insert into employee_aarti(employeeid, employeemail, employeename)
+values
+
+(1, 'aarti_verma@amicusglobal.com', 'Aarti'),
+(2, 'chandan_soni@amicusglobal.com', 'Chandan'),
+(3, 'rachana_k@amicusglobal.com', 'Rachana'),
+(4, 'vivek_purbey@amicusglobal.com', 'Vivek'),
+(5, 'ruchir_verma@amicusglobal.com', 'Ruchir'),
+(6, 'ravi_kukreja@amicusglobal.com', 'Ravi')
+
+
+drop table employee_aarti
+
+
+
+insert into role_aarti(roleid,rolename)
+values
+(1, 'admin'),
+(2, 'planner')
+
+
+
+  insert into employeeRole_aarti(employeeroleid, employeeid, roleid)
+values
+(1, 1, 1),
+(2, 2, 2),
+(3, 3, 2),
+(4, 4, 2),
+(5, 5, 2),
+(6, 6, 2)
+
+
+
+--select * from employee_aarti
+--select * from role_aarti
+--select * from employeeRole_aarti
+
+ --drop table employeeRole_aarti
+ --drop table role_aarti
+
+
+ --------------------------------------procedure to AAD fetching role claim--------------------------------------------------------
+
+-- creating stored procedure
+
+CREATE PROCEDURE EmployeeRolesInfos
+
+ @Email NVARCHAR(255)
+ 
+ AS
+  BEGIN
+   
+ SELECT  E.employeemail, E.employeename, R.rolename
+    FROM employee_aarti AS E
+    INNER JOIN employeeRole_aarti AS ER ON E.employeeid = ER.employeeid
+    INNER JOIN role_aarti AS R ON ER.roleid = R.roleid
+	where E.employeemail = @Email
+
+  END;
+  
+  
+
+ --EXEC EmployeeRolesInfos @Email = 'ruchir_verma@amicusglobal.com'
+
+/* 1	aarti_verma@amicusglobal.com	Aarti       admin
+   2	chandan_soni@amicusglobal.com	Chandan     planner
+
+*/
+ -------------------------------------------AAD part ends here --------------------------------------------------------------------
+
+
+
+ --/////////////////////////////////////////////table////////////////////////////////////////////////////////////////////////////////////////////
+
+CREATE TABLE EmployeeMaster_arti (
+    EmployeeId INT IDENTITY(1,1) PRIMARY KEY,
+    EmployeeEmail NVARCHAR(255),
+    EmployeeName NVARCHAR(255),
+    ManagerId INT,
+    PlannerId INT,
+    Department NVARCHAR(255),
+    IsAdmin INT,
+    PerformanceRatingId INT,
+    PerformanceRating NVARCHAR(255),
+    StatusOfPlanning NVARCHAR(255),
+    IsEligibleForPlanning INT,
+    FOREIGN KEY (ManagerId) REFERENCES EmployeeMaster_arti(EmployeeId),
+    FOREIGN KEY (PlannerId) REFERENCES EmployeeMaster_arti(EmployeeId),
+    FOREIGN KEY (PerformanceRatingId) REFERENCES PerformanceRatingMaster_arti(PerformanceRatingId),
+    CONSTRAINT ck_testbool_isadmin CHECK (IsAdmin IN (1, 0)),
+    CONSTRAINT ck_testbool_isplneligible CHECK (IsEligibleForPlanning IN (1, 0)),
+    CONSTRAINT ck_testbool_depart CHECK (Department IN ('CS', 'IT')),
+    CONSTRAINT ck_testbool_perfr CHECK (PerformanceRating IN ('Poor', 'Satisfactory', 'Good', 'Excellent'))
+);
+
+
+
+drop table EmployeeMaster_arti
+
+
+insert into EmployeeMaster_arti(EmployeeEmail, EmployeeName, ManagerId, PlannerId, Department, IsAdmin, PerformanceRatingId,PerformanceRating, StatusOfPlanning, IsEligibleForPlanning)  
+values
+('aarti_verma@amicusglobal.com', 'Aarti', 2, 2, 'CS', 1, 1,'Poor', 'draft', 0),
+('ruchir_verma@amicusglobal.com', 'Ruchir', 4, 4, 'CS', 0, 2, 'Satisfactory', 'draft', 1),
+('sharma_srishti@amicusglobal.com', 'Srishti', 4, 4, 'IT', 0, 2, 'Poor', 'draft', 1),
+('ravi_kukreja@amicusglobal.com', 'Ravi', 4, 4, 'CS', 0, 4, 'Excellent', 'draft', 1),
+('chandan_soni@amicusglobal.com', 'Chandan',2, 2, 'IT', 0, 4,'Good', 'draft', 1) ,      
+('avartika_verma@amicusglobal.com', 'Avartika', 1, 1 , 'IT', 0, 2, 'Poor', 'draft', 1),
+('rachana_k@amicusglobal.com', 'Rachana', 9, 9 , 'CS', 0, 2, 'Good', 'draft', 1),
+('vivek_purbey@amicusglobal.com', 'Vivek', 9,9 , 'IT', 0, 3, 'Good', 'draft', 1),
+('yash_bakshi@amicusglobal.com', 'Yash', 5, 5, 'CS', 0, 2, 'Good', 'draft', 1)
+
+
+select * from EmployeeMaster_arti
+
+drop table EmployeeMaster_arti
+
+
+
+UPDATE EmployeeMaster_arti
+SET PerformanceRating = null
+
+
+
+--//////////////////procedure to get the employees based on admin or planner//////////////////////////////////////////////////////////////////////////////////////////////
+--////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+CREATE PROCEDURE [dbo].[procedureToGetEmployeeData_aartiB]
+@Email NVARCHAR (255)
+AS
+BEGIN
+    DECLARE @id AS INT;
+    DECLARE @isadmin AS INT;
+    SET @id = (SELECT EmployeeId
+               FROM   EmployeeMaster_arti
+               WHERE  EmployeeEmail = @Email);
+    SET @isadmin = (SELECT TOP 1 IsAdmin
+                    FROM   EmployeeMaster_arti
+                    WHERE  EmployeeId = @id);
+    IF @isadmin = 1
+        SELECT EmployeeId,
+               EmployeeName,
+               EmployeeEmail,
+               (SELECT TOP 1 emp2.EmployeeName
+                FROM   EmployeeMaster_arti AS emp2
+                WHERE  emp1.ManagerId = emp2.EmployeeId) AS ManagerName,
+               (SELECT TOP 1 emp3.EmployeeName
+                FROM   EmployeeMaster_arti AS emp3
+                WHERE  emp1.PlannerId = emp3.EmployeeId) AS PlannerName,
+               Department,
+               PerformanceRating,
+               StatusOfPlanning
+        FROM   EmployeeMaster_arti AS emp1;
+    ELSE
+        SELECT EmployeeId,
+               EmployeeName,
+               EmployeeEmail,
+               (SELECT TOP 1 emp4.EmployeeName
+                FROM   EmployeeMaster_arti AS emp4
+                WHERE  emp5.ManagerId = emp4.EmployeeId) AS ManagerName,
+               (SELECT TOP 1 emp7.EmployeeName
+                FROM   EmployeeMaster_arti AS emp7
+                WHERE  emp5.PlannerId = emp7.EmployeeId) AS PlannerName,
+               Department,
+               PerformanceRating,
+               StatusOfPlanning
+        FROM   EmployeeMaster_arti AS emp5
+        WHERE  PlannerId = @id;
+END
+
+
+--////////////////////procedure to save data on database when submit button is clicked by the planner//////////////////////////////////////////////////////////////////////
+--////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+CREATE PROCEDURE [dbo].[ChangeStatusToCompleted_a]
+@JsonEmployee NVARCHAR (MAX)
+AS
+BEGIN
+    CREATE TABLE #TempTable_aarti (
+        EmployeeId       INT            PRIMARY KEY,
+        StatusOfPlanning NVARCHAR (255)
+    );
+    INSERT INTO #TempTable_aarti (EmployeeId, StatusOfPlanning)
+    SELECT EmployeeId,
+           'Completed'
+    FROM   OPENJSON (@JsonEmployee) WITH (EmployeeId INT '$.EmployeeId');
+    UPDATE yt
+    SET    yt.StatusOfPlanning = tt.StatusOfPlanning
+    FROM   EmployeeMaster_arti AS yt
+           INNER JOIN
+           #TempTable_aarti AS tt
+           ON yt.EmployeeId = tt.EmployeeId;
+    DROP TABLE #TempTable_aarti;
+END
+
+
+
+
+--////////////////procedure to send the updated array to the database after changing the performance rating  /////////////////////////////////////////////////////////////
+--///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+CREATE PROCEDURE [dbo].[SaveEmployeeDatasAsDraft_arti]
+@JsonEmployee NVARCHAR (MAX)
+AS
+BEGIN
+    CREATE TABLE #TempTable_aarti (
+        EmployeeId        INT            PRIMARY KEY,
+        PerformanceRating NVARCHAR (255)
+    );
+    INSERT INTO #TempTable_aarti (EmployeeId, PerformanceRating)
+    SELECT EmployeeId,
+           PerformanceRating
+    FROM   OPENJSON (@JsonEmployee) WITH (EmployeeId INT '$.EmployeeId', PerformanceRating NVARCHAR (255) '$.PerformanceRating');
+    UPDATE ema
+    SET    ema.PerformanceRating = tt.PerformanceRating
+    FROM   EmployeeMaster_arti AS ema
+           INNER JOIN
+           #TempTable_aarti AS tt
+           ON ema.EmployeeId = tt.EmployeeId;
+    DROP TABLE #TempTable_aarti;
+END
+
+
+
+
+--///////////////////////////////////////////// insert or update employee  ////////////////////////////////////////////////////////////////////////////////////////
+--/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+CREATE PROCEDURE [dbo].[InsertOrUpdateEmployee]
+    @EmpJson NVARCHAR(MAX)
+AS
+BEGIN
+    DECLARE @EmployeeId AS INT;
+    DECLARE @EmployeeName AS NVARCHAR(MAX);
+    DECLARE @EmployeeEmail AS NVARCHAR(MAX);
+    DECLARE @ManagerName AS NVARCHAR(MAX);
+    DECLARE @Department AS NVARCHAR(MAX);
+    DECLARE @PlannerName AS NVARCHAR(MAX);
+ 
+    -- Extract values from JSON
+    SELECT
+        @EmployeeId = EmployeeId,
+        @EmployeeName = EmployeeName,
+        @EmployeeEmail = EmployeeEmail,
+        @ManagerName = ManagerName,
+        @Department = Department,
+        @PlannerName = PlannerName
+    FROM OPENJSON(@EmpJson)
+    WITH (
+        EmployeeId INT '$.EmployeeId',
+        EmployeeName NVARCHAR(MAX) '$.EmployeeName',
+        EmployeeEmail NVARCHAR(MAX) '$.EmployeeEmail',
+        ManagerName NVARCHAR(MAX) '$.ManagerName',
+        Department NVARCHAR(MAX) '$.Department',
+        PlannerName NVARCHAR(MAX) '$.PlannerName'
+    );
+ 
+    -- Check if EmployeeId is 0 (add new record) or non-zero (update existing record)
+    IF @EmployeeId = 0
+    BEGIN
+        -- Insert new record
+        INSERT INTO EmployeeMaster_arti (EmployeeName, EmployeeEmail, ManagerId, PlannerId, Department, StatusOfPlanning)
+        VALUES (@EmployeeName, @EmployeeEmail, (SELECT EmployeeId FROM EmployeeMaster_arti WHERE EmployeeName = @ManagerName),
+                (SELECT EmployeeId FROM EmployeeMaster_arti WHERE EmployeeName = @PlannerName), @Department, 'draft');
+    END
+    ELSE
+    BEGIN
+        -- Update existing record
+        UPDATE E
+        SET E.EmployeeName = @EmployeeName,
+            E.EmployeeEmail = @EmployeeEmail,
+            E.ManagerId = (SELECT EmployeeId FROM EmployeeMaster_arti WHERE EmployeeName = @ManagerName),
+            E.PlannerId = (SELECT EmployeeId FROM EmployeeMaster_arti WHERE EmployeeName = @PlannerName),
+            E.Department = @Department
+        FROM EmployeeMaster_arti AS E
+        WHERE E.EmployeeId = @EmployeeId;
+    END
+END
+
+
+
+--////////////////////////////////////////////////// execute //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+DECLARE @json NVARCHAR(MAX) = '{"EmployeeId": 0, "EmployeeName": "Johney", "EmployeeEmail": "john@example.com", "ManagerName": "Manager1", "Department": "IT", "PlannerName": "Planner1"}';
+ 
+EXEC [dbo].[InsertOrUpdateEmployee] @EmpJson = @json;
+
+
+select * from EmployeeMaster_arti

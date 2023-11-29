@@ -23,7 +23,6 @@ function loadDataIntoDataTable({ dataTable }) {
             //intilizeDataTable(globalArray);
             dataTable.rows.add(data).draw();
 
-
             console.log(globalArray);
 
         },
@@ -63,16 +62,38 @@ function intilizeDataTable(globalArray) {
                 data: "department",
             },
             {
+                "render": function (data, type, row) { 
+
+                    if (row.statusOfPlanning === "Completed") {
+                        
+                        return `<span>${row.performanceChallenges}</span>`;
+
+                    }
+                    else {
+                  
+                        return `<select class="optionValue" id="performanceChallengesDropdown${row.employeeId}" onchange = "SaveAsDraft(${row.employeeId})">
+                       <option value="" >select an option</option>
+                       <option value="Training Required" ${row.performanceChallenges === "Training Required" ? "selected" : ''}>Training Required</option>
+                       <option value="Was/Is in PIP" ${row.performanceChallenges === "Was/Is in PIP" ? "selected" : ''}>Was/Is in PIP</option>
+                       <option value="No certification" ${row.performanceChallenges === "No certification" ? "selected" : ''}>No certification</option>
+                       <option value="No challenges" ${row.performanceChallenges === "No challenges" ? "selected" : ''}>No challenges</option>
+                       </select >`;
+
+                    }
+
+                }
+            },
+            {
                 "render": function (data, type, row) {  // window.location.href()
 
-                    if (row.statusOfPlanning == "Completed") {
+                    if (row.statusOfPlanning === "Completed") {
                         //  flag = 1;
                         return `<span>${row.performanceRating}</span>`;
 
                     }
                     else {
                         //   flag = 0;
-                        return `<select class="optionValue" id="performanceRatingDropdown${row.employeeId}" onchange = "SaveAsDraft(${row.employeeId})">
+                        return `<select class="optionValue" id="performanceRatingDropdown${row.employeeId}" onchange ="SaveAsDraft(${row.employeeId})">
                        <option value="" >select an option</option>
                        <option value="Poor" ${row.performanceRating == "Poor" ? "selected" : ''}>Poor</option>
                        <option value="Satisfactory" ${row.performanceRating === "Satisfactory" ? "selected" : ''}>Satisfactory</option>
@@ -135,17 +156,33 @@ function SaveEmployee(event) {
 }*/
 
 function SaveAsDraft(employeeId) {
-    // Use map to update the performance rating for the specific employee
+
+      // Use map to update the performance rating for the specific employee
     globalArray = globalArray.map(employee => {
         if (employee.employeeId === employeeId) {
             return {
                 ...employee,
-                performanceRating: $('#performanceRatingDropdown' + employeeId).val()
+                performanceRating: $('#performanceRatingDropdown' + employeeId).val(),
+                performanceChallenges: $('#performanceChallengesDropdown' + employeeId).val()
             };
         }
         return employee;
     });
 }
+
+
+/*function SaveAsDraftToPerformanceChallenges(employeeId) {
+    // Use map to update the performance rating for the specific employee
+    globalArray = globalArray.map(employee => {
+        if (employee.employeeId === employeeId) {
+            return {
+                ...employee,
+                performanceChallenges: $('#performanceChallengesDropdown' + employeeId).val()
+            };
+        }
+        return employee;
+    });
+}*/
 
 
 

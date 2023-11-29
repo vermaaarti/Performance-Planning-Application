@@ -10,8 +10,9 @@ function Submit(event) {
 
     // Check if all performance ratings are selected
     var allRatingsSelected = checkAllRatingsSelected();
+    var allChallengeSelected = checkAllChallengesSelected();
 
-    if (allRatingsSelected) {
+    if (allRatingsSelected && allChallengeSelected) {
         SaveEmployee(event);
         // If all ratings are selected, proceed with the AJAX request
         $.ajax({
@@ -30,7 +31,7 @@ function Submit(event) {
         });
     } else {
         // If not all ratings are selected, show an alert
-        alert('Some performance ratings are not selected. Please select all ratings before submitting.');
+        alert('Some performance ratings/challenges are not selected. Please select all ratings before submitting.');
     }
 }
 
@@ -50,6 +51,26 @@ function checkAllRatingsSelected() {
     });
 
     return allRatingsSelected;
+}
+
+
+
+function checkAllChallengesSelected() {
+    var allChallengeSelected = true;
+
+    // Iterate over the global array and check if all challenges are selected
+    globalArray.forEach(function (item) {
+        var performanceChallengesDropdown = `#performanceChallengesDropdown${item.employeeId}`;
+        var selectedRating = $(performanceChallengesDropdown).val();
+
+        // Check if the performance challenges is not selected
+        if (selectedRating === "") {
+            allChallengeSelected = false;
+            return false; // Break out of the loop
+        }
+    });
+
+    return allChallengeSelected;
 }
 
 

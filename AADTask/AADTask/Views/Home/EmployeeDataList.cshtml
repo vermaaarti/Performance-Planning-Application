@@ -10,6 +10,7 @@
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="~/js/employeeAdmin.js"></script>
 <script src="~/js/employeePlanning.js"></script>
+<script src="~/js/employeeDetail.js"></script>
 
 <button type="button" id="saveDataButton" onclick="SaveEmployee(event)" class="btn btn-info m-2">Save as Draft</button>
 
@@ -17,7 +18,7 @@
 {
     <button type="button" onclick="Submit(event)" class="btn btn-info m-2">Submit</button>
 }
-<!--<button type="button" onclick="Submit(event)" class="btn btn-info m-2">Submit</button>-->
+
 @if (User.IsInRole("admin"))
 {
     <button type="button" onclick="AddNewEmployee(event)" class="btn btn-info m-2">Add New Employee</button>
@@ -33,6 +34,7 @@
             <th>Manager Name</th>
             <th>Planner Name</th>
             <th>Department</th>
+            <th>Performance Challenges</th>
             <th>Performance Rating</th>
             <th> Status of Planning</th>
         

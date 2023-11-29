@@ -70,7 +70,7 @@ namespace AADTask.Controllers
 
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.CommandText = "procedureToGetEmployeeData_aartiB"; // Use the name of your stored procedure
+                cmd.CommandText = "procedureToGetEmployeeData_aartiD"; // Use the name of your stored procedure
 
                 cmd.Parameters.Add(new SqlParameter("@Email", email));
 
@@ -103,6 +103,7 @@ namespace AADTask.Controllers
                 newObj.PlannerName = dr["PlannerName"].ToString();
                 newObj.Department = dr["Department"].ToString();
                 newObj.PerformanceRating = dr["PerformanceRating"].ToString();
+                newObj.performanceChallenges = dr["performanceChallenges"].ToString();
                 newObj.StatusOfPlanning = dr["StatusOfPlanning"].ToString();
 
                 
@@ -203,7 +204,7 @@ namespace AADTask.Controllers
 
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.CommandText = "SaveEmployeeDatasAsDraft_arti"; // Use the name of your stored procedure
+                cmd.CommandText = "SaveEmployeeDatasAsDraft_artiA"; // Use the name of your stored procedure
 
                 cmd.Parameters.Add(new SqlParameter("@JsonEmployee", JSONData));
 
@@ -242,90 +243,25 @@ namespace AADTask.Controllers
 
             return View(new AllEmployee());
         }
-
-
-         public DataTable AddNewEmployee(AllEmployee employeeList)
-
-        {
-
-            var returnDataTable = new DataTable();
-            var JSONData = JsonConvert.SerializeObject(employeeList);
-            using (SqlConnection connection = new SqlConnection(connectionString))
-
-            {
-                connection.Open();
-
-                SqlCommand cmd = new SqlCommand();
-
-                cmd.Connection = connection;
-
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                cmd.CommandText = "InsertNewEmployee_artiM"; // Use the name of your stored procedure
-
-                cmd.Parameters.Add(new SqlParameter("@EmpJson", JSONData));
-
-                SqlDataAdapter dataAdp = new SqlDataAdapter(cmd);
-
-                dataAdp.Fill(returnDataTable);
-
-                connection.Close();
-
-            }
-            return returnDataTable;
-
-
-        }
-        public DataTable UpdateSingleEmployee(AllEmployee emplist)
-        {
-            var returnDataTable = new DataTable();
-            var JsonData = JsonConvert.SerializeObject(emplist);
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                SqlCommand cmd = new SqlCommand();
-                cmd.Connection = connection;
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandText = "UpdateEmployeeDataByClickingonNameG";
-                cmd.Parameters.Add(new SqlParameter("@EmployeeJson", JsonData));
-                SqlDataAdapter dataAdp = new SqlDataAdapter(cmd);
-                dataAdp.Fill(returnDataTable);
-                connection.Close();
-            }
-            return returnDataTable;
-        }
+      
 
         public DataTable AddUpdateEmployee(AllEmployee employeeList)
-
         {
-
             var returnDataTable = new DataTable();
-            var JSONData = JsonConvert.SerializeObject(employeeList);
+            var JsonData = JsonConvert.SerializeObject(employeeList);
             using (SqlConnection connection = new SqlConnection(connectionString))
-
             {
                 connection.Open();
-
                 SqlCommand cmd = new SqlCommand();
-
                 cmd.Connection = connection;
-
                 cmd.CommandType = CommandType.StoredProcedure;
-
-                cmd.CommandText = "InsertOrUpdateEmployee"; // Use the name of your stored procedure
-
-                cmd.Parameters.Add(new SqlParameter("@EmpJson", JSONData));
-
+                cmd.CommandText = "InsertOrUpdateEmployee";
+                cmd.Parameters.Add(new SqlParameter("@EmpJson", JsonData));
                 SqlDataAdapter dataAdp = new SqlDataAdapter(cmd);
-
                 dataAdp.Fill(returnDataTable);
-
                 connection.Close();
-
             }
             return returnDataTable;
-
-
         }
 
         [HttpPost]
@@ -333,15 +269,7 @@ namespace AADTask.Controllers
         {
             AddUpdateEmployee(empList);
 
-            /* if (empList.EmployeeId == 0)
-             {
-                 AddNewEmployee(empList);
-             }
-             else
-             {
-
-                     UpdateSingleEmployee(empList); 
-             }*/
+           
             return Ok();
         }
 

@@ -12257,11 +12257,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\aarti_verma\\Desktop\\github-things\\Performance-Planning-Application\\AADTask\\AADTask\\AADTask.csproj",
+      "projectUniqueName": "D:\\customapps\\file---to---run\\AADTask\\AADTask\\AADTask.csproj",
       "projectName": "AADTask",
-      "projectPath": "C:\\Users\\aarti_verma\\Desktop\\github-things\\Performance-Planning-Application\\AADTask\\AADTask\\AADTask.csproj",
+      "projectPath": "D:\\customapps\\file---to---run\\AADTask\\AADTask\\AADTask.csproj",
       "packagesPath": "C:\\Users\\aarti_verma\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\aarti_verma\\Desktop\\github-things\\Performance-Planning-Application\\AADTask\\AADTask\\obj\\",
+      "outputPath": "D:\\customapps\\file---to---run\\AADTask\\AADTask\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\aarti_verma\\AppData\\Roaming\\NuGet\\NuGet.Config",

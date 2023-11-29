@@ -3,20 +3,15 @@ namespace AADTask.Models
 {
     public class AllEmployee
     {
-        //public int EmployeMasterId { get; set; }
 
         public int EmployeeId { get; set; }
 
         public string? EmployeeName { get; set; }
 
-       // public string? Email { get; set; }
-
-    /*this*/   // public string? employeeemail{ get; set; }
 
         public string? EmployeeEmail { get; set; }
 
-      /*this*/ // public string? managerName { get; set; }
-
+   
         public string? ManagerName { get; set; }
 
         public string? Department { get; set; }
@@ -26,6 +21,10 @@ namespace AADTask.Models
         public string? PlannerName { get; set; }
 
         public string? planneremail { get; set; }
+
+
+        public string? performanceChallenges { get; set; }
+     
 
         public string? StatusOfPlanning { get; set; }
 
@@ -56,6 +55,13 @@ namespace AADTask.Models
         Good,
         Satisfactory,
         Excellent
+    }
+    public enum Perch
+    {
+        Training_Required,
+        Was_Is_in_PIP,
+        No_certification,
+        No_challenges
     }
 
 
