@@ -25,13 +25,13 @@ Pages :
 
      Performance Planner(Planner Page)
 
-     1. It displays a table of employees with columns : EmployeeName(hyperlink), Email, ManagerName, Department, PlannerName, Performance Challenge(Input type dropdown : "Training Required", "Was/Is in PIP" , "No certification", "No challenges"), Performance Rating(Input type dropdown : Poor, Satisfactory,Good, Excellent), 
+1. It displays a table of employees with columns : EmployeeName(hyperlink), Email, ManagerName, Department, PlannerName, Performance Challenge(Input type dropdown : "Training Required", "Was/Is in PIP" , "No certification", "No challenges"), Performance Rating(Input type dropdown : Poor, Satisfactory,Good, Excellent), 
   "Status", StatusOfPlanning etc.
-    2. When logged in user is a planner, they would be able to see only list of employees for whom they are planners.
-    3. By default, "Status" of planning is draft.
-    4. Planners will be able to see "Submit" button with which it will save the changes and "Status" of planning should get "InProgress".
-    5. Validation :  Clicking of submit button will first check if all the employee's performance rating and performance challenges are selected.
-    6. Both admins and planners can see "Save As Draft" button, which will enable them to save changes(Performance Rating) of employees.
+2. When logged in user is a planner, they would be able to see only list of employees for whom they are planners.
+3. By default, "Status" of planning is draft.
+4. Planners will be able to see "Submit" button with which it will save the changes and "Status" of planning should get "InProgress".
+5. Validation :  Clicking of submit button will first check if all the employee's performance rating and performance challenges are selected.
+6. Both admins and planners can see "Save As Draft" button, which will enable them to save changes(Performance Rating) of employees.
 
 
       Performance Approver(Approver Page)
