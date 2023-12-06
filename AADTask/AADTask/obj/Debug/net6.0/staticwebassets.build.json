@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "7T9FNjFB1b06chDinEsfioa92QyzwPxV4T5EiFbZUCI=",
+  "Hash": "kzlWsqps+xU6oi4ceqvysyes3joMFFy+nTGXMSCoLfU=",
   "Source": "AADTask",
   "BasePath": "_content/AADTask",
   "Mode": "Default",
@@ -1103,6 +1103,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\favicon.ico"
+    },
+    {
+      "Identity": "D:\\customapps\\file---to---run\\AADTask\\AADTask\\wwwroot\\js\\Approver.js",
+      "SourceId": "AADTask",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\customapps\\file---to---run\\AADTask\\AADTask\\wwwroot\\",
+      "BasePath": "_content/AADTask",
+      "RelativePath": "js/Approver.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\Approver.js"
     },
     {
       "Identity": "D:\\customapps\\file---to---run\\AADTask\\AADTask\\wwwroot\\js\\employeeAdmin.js",

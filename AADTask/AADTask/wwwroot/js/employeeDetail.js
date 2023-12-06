@@ -73,6 +73,7 @@ function ValidateForm() {
     department = $("#department")[0].value;
     plannerName = $("#plannerName")[0].value;
     StatusOfPlanning = $("#StatusOfPlanning")[0].value;
+    approver = $("#approver")[0].value;
 
 
     obj = {
@@ -82,11 +83,12 @@ function ValidateForm() {
         managerName: managerName,
         department: department,
         plannerName: plannerName,
-        StatusOfPlanning: StatusOfPlanning
+        StatusOfPlanning: StatusOfPlanning,
+        approver: approver
     }
 
 
-    if (employeeId && employeeName && employeeEmail && managerName && department && plannerName) {
+    if (employeeId && employeeName && employeeEmail && managerName && department && plannerName && approver) {
         return true;
     }
     else {
@@ -119,8 +121,8 @@ function checkStatusOfPlanning() {
     // Get the value of the hidden field
     var employeeStatusOfPlanningValue = $("#StatusOfPlanning").val();
 
-    // Check if the value is 'Completed' and hide the button accordingly
-    if (employeeStatusOfPlanningValue === 'Completed') {
+    // Check if the value is 'InProgress' and hide the button accordingly
+    if (employeeStatusOfPlanningValue === 'InProgress') {
         $("#bnttosubmitdata").hide();
     }
 }

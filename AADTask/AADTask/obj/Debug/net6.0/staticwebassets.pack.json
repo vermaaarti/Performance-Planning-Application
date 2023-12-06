@@ -13,6 +13,10 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "D:\\customapps\\file---to---run\\AADTask\\AADTask\\wwwroot\\js\\Approver.js",
+      "PackagePath": "staticwebassets\\js\\Approver.js"
+    },
+    {
       "Id": "D:\\customapps\\file---to---run\\AADTask\\AADTask\\wwwroot\\js\\JavaScript.js",
       "PackagePath": "staticwebassets\\js\\JavaScript.js"
     },

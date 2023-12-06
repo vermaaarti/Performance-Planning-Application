@@ -3,7 +3,6 @@
 
 
 // fn to save employees data by planner when submit button is clicked
-
 function Submit(event) {
     event.preventDefault();
 
@@ -20,19 +19,41 @@ function Submit(event) {
             url: '/Home/UpdateStatusToCompleted',
             data: { employeeList: globalArray },
             success: function () {
-                alert('Status of planning changed to Completed.');
-                // changeDataTable();
-                console.log(globalArray);
+             
+                alert('Status of planning changed to InProgress.');
+               
+               // sendDataToTaskTable();
+                
+                console.log("my array "+ globalArray);
                 location.reload(true);
-            },
+
+                 },
             error: function (errorThrown, textStatus, xhr) {
                 console.log('Error in Operation');
             }
         });
-    } else {
+
+           } else {
         // If not all ratings are selected, show an alert
         alert('Some performance ratings/challenges are not selected. Please select all ratings before submitting.');
     }
+
+    $.ajax({
+        type: 'POST',
+        url: '/Home/AddDataIntoTaskTableForResult',
+        data: {employeeList:globalArray},
+        success: function () {
+          console.log("Data added to ApprovalTask_aarti table successfully.");
+           
+        },
+        error: function (errorThrown, textStatus, xhr) {
+            console.log('Error in operation: ' + errorThrown);
+        }
+    });
+
+   // CheckStatusOfPlanningIsDraft();
+   // $("#btnToSubmitStatusOfPlanning").hide();
+
 }
 
 function checkAllRatingsSelected() {
@@ -73,5 +94,36 @@ function checkAllChallengesSelected() {
     return allChallengeSelected;
 }
 
-
 // fn ends here
+
+//fn to send data into the task table
+
+/*function sendDataToTaskTable() {
+      
+        $.ajax({
+            type: 'POST',
+            url: '/Home/AddDataIntoTaskTableForResult',
+            success: function () {
+               
+            },
+            error: function (errorThrown, textStatus, xhr) {
+                console.log('Error in operation: ' + errorThrown);
+            }
+        });
+    
+
+}*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+

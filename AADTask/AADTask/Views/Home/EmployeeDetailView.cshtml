@@ -40,6 +40,10 @@
     @Html.DropDownListFor(Model => Model.PlannerName, new SelectList(Enum.GetValues(typeof(Plnr))),
     "Select PlannerName", new { @class = "form-control ", @id = "plannerName"})
 
+@Html.LabelFor(Model => Model.approver)
+@Html.DropDownListFor(Model => Model.approver, new SelectList(Enum.GetValues(typeof(Approvr))),
+    "Select approver", new { @class = "form-control ", @id = "approver"})
+
 
    @Html.HiddenFor(Model => Model.StatusOfPlanning, new { @id = "StatusOfPlanning" })
 
@@ -49,14 +53,4 @@
 <button type="submit" class="btn btn-primary my-3" id="bnttosubmitdata" onclick="SaveEmployeeDetails(event, @Model.EmployeeId)">Save Details</button>
 
 
-<!--<script>
-    $(document).ready(function () {
-        // Get the value of the hidden field
-        var employeeStatusOfPlanningValue = $("#StatusOfPlanning").val();
 
-        // Check if the value is 'completed' and hide the button accordingly
-        if (employeeStatusOfPlanningValue === 'Completed') {
-            $("#bnttosubmitdata").hide();
-        }
-    });
-</script>-->

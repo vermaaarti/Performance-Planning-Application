@@ -1,14 +1,10 @@
 ﻿let globalArray = [];
 
-
-/*$(document).ready(function () {
-    CreateDataTable();
-   });*/
 $(document).ready(function () {
 
     let dataTable = intilizeDataTable(globalArray);
     loadDataIntoDataTable({ dataTable });
-
+    
 });
 function loadDataIntoDataTable({ dataTable }) {
 
@@ -20,10 +16,12 @@ function loadDataIntoDataTable({ dataTable }) {
 
             globalArray = data;
 
-            //intilizeDataTable(globalArray);
             dataTable.rows.add(data).draw();
 
             console.log(globalArray);
+            CheckStatusOfPlanningIsDraft(globalArray);
+
+          
 
         },
         error: function (errorThrown, textStatus, xhr) {
@@ -33,7 +31,6 @@ function loadDataIntoDataTable({ dataTable }) {
     });
 }
 
-console.log(globalArray.length);
 
 
 
@@ -64,7 +61,7 @@ function intilizeDataTable(globalArray) {
             {
                 "render": function (data, type, row) { 
 
-                    if (row.statusOfPlanning === "Completed") {
+                    if (row.statusOfPlanning === "InProgress") {
                         
                         return `<span>${row.performanceChallenges}</span>`;
 
@@ -86,7 +83,7 @@ function intilizeDataTable(globalArray) {
             {
                 "render": function (data, type, row) {  // window.location.href()
 
-                    if (row.statusOfPlanning === "Completed") {
+                    if (row.statusOfPlanning === "InProgress") {
                         //  flag = 1;
                         return `<span>${row.performanceRating}</span>`;
 
@@ -107,8 +104,8 @@ function intilizeDataTable(globalArray) {
             },
             {
                 data: "statusOfPlanning",
-            }
-
+            },
+                     
         ],
         lengthChange: false,
         searching: false,
@@ -124,8 +121,6 @@ function intilizeDataTable(globalArray) {
 function SaveEmployee(event) {
     event.preventDefault();
 
-
-
     $.ajax({
         type: 'POST',
         url: '/Home/UpdatedData',
@@ -133,7 +128,7 @@ function SaveEmployee(event) {
         success: function (data) {
 
             console.log(globalArray);
-
+           
         },
         error: function (errorThrown, textStatus, xhr) {
             console.log('Error in Operation');
@@ -157,7 +152,7 @@ function SaveEmployee(event) {
 
 function SaveAsDraft(employeeId) {
 
-      // Use map to update the performance rating for the specific employee
+      // Use map to update the performance rating & performance challenge for the specific employee
     globalArray = globalArray.map(employee => {
         if (employee.employeeId === employeeId) {
             return {
@@ -187,7 +182,6 @@ function SaveAsDraft(employeeId) {
 
 
 // fn to redirect into method to add new employee
-
 function AddNewEmployee(event) {
 
     event.preventDefault();
@@ -196,3 +190,42 @@ function AddNewEmployee(event) {
 
 
 }
+
+
+
+
+
+
+
+
+
+
+function CheckStatusOfPlanningIsDraft(globalArray) {
+ 
+   /* for (var i = 0; i < globalArray.length; i++) {
+        if (globalArray[i].statusOfPlanning === 'InProgress') {
+            console.log("hii there");
+            $("#btnToSubmitStatusOfPlanning").hide();
+        }
+    }*/
+    globalArray.forEach(function (item) {
+        if (item.statusOfPlanning === 'InProgress') {
+            console.log("hii there");
+            $("#btnToSubmitStatusOfPlanning").hide();
+        }
+    });
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

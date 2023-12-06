@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Data.SqlClient;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Security.Claims;
@@ -70,7 +71,7 @@ namespace AADTask.Controllers
 
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.CommandText = "procedureToGetEmployeeData_aartiD"; // Use the name of your stored procedure
+                cmd.CommandText = "procedureToGetEmployeeData_aartiL"; // Use the name of your stored procedure
 
                 cmd.Parameters.Add(new SqlParameter("@Email", email));
 
@@ -105,8 +106,10 @@ namespace AADTask.Controllers
                 newObj.PerformanceRating = dr["PerformanceRating"].ToString();
                 newObj.performanceChallenges = dr["performanceChallenges"].ToString();
                 newObj.StatusOfPlanning = dr["StatusOfPlanning"].ToString();
-
-                
+                newObj.PlannerId = Convert.ToInt32(dr["PlannerId"]);
+                newObj.ApproverId = Convert.ToInt32(dr["ApproverId"]);
+                newObj.CreatedOn = dr["CreatedOn"].ToString();
+                newObj.ApprovalStatus = dr["ApprovalStatus"].ToString();
 
                 objectList.Add(newObj);
             }
@@ -140,6 +143,7 @@ namespace AADTask.Controllers
 
             var returnDataTable = new DataTable();
             var JSONData = JsonConvert.SerializeObject(employeeList);
+
             using (SqlConnection connection = new SqlConnection(connectionString))
 
             {
@@ -151,7 +155,7 @@ namespace AADTask.Controllers
 
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.CommandText = "ChangeStatusToCompleted_a"; // Use the name of your stored procedure
+                cmd.CommandText = "ChangeStatusToInProgress";  //  ChangeStatusToCompleted_a  // Use the name of your stored procedure
 
                 cmd.Parameters.Add(new SqlParameter("@JsonEmployee", JSONData));
 
@@ -167,12 +171,71 @@ namespace AADTask.Controllers
 
         }
 
+
+        // fn to add data into the task table
+        public DataTable AddDataIntoTaskTable(List<AllEmployee> employeeList)
+
+        {
+
+            var claimsIdentity = User.Identities.FirstOrDefault();
+
+            var emailClaim = claimsIdentity?.Claims;
+
+            var email = emailClaim.FirstOrDefault((p) => p.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/upn").Value;
+
+            var returnDataTable = new DataTable();
+            var JSONData = JsonConvert.SerializeObject(employeeList);
+          
+            using (SqlConnection connection = new SqlConnection(connectionString))
+
+            {
+
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand();
+
+                cmd.Connection = connection;
+
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.CommandText = "AddDataIntoApproverTableF"; // Use the name of your stored procedure
+
+                cmd.Parameters.Add(new SqlParameter("@ApproverEmail", email));
+
+                cmd.Parameters.Add(new SqlParameter("@EmpJson", JSONData));
+
+                SqlDataAdapter dataAdp = new SqlDataAdapter(cmd);
+
+                dataAdp.Fill(returnDataTable);
+
+                connection.Close();
+
+            }
+
+            return returnDataTable;
+
+        }
+
+        [HttpPost]
+        public IActionResult AddDataIntoTaskTableForResult(List<AllEmployee> employeeList)
+        {
+            var data = AddDataIntoTaskTable(employeeList);
+            if (data != null)
+            {
+                return Ok();
+            }
+            return BadRequest();
+        }
+
+
         [HttpPost]
         public IActionResult UpdateStatusToCompleted(List<AllEmployee> employeeList)
         {
             // Call the procedure to change the status of planning
          
             var data = UpdateEmployeeStatus(employeeList);
+            // var data2 = AddDataIntoTaskTable(employeeList);
+            // if (data != null && data2 != null)
             if (data != null)
             {
                 return Ok();
@@ -288,6 +351,126 @@ namespace AADTask.Controllers
         }
 
         //fn ends here
+
+
+
+        // fn to go to the approver page
+
+         public DataTable ApproverEmployeeData()
+        {
+            var claimsIdentity = User.Identities.FirstOrDefault();
+            var emailClaim = claimsIdentity?.Claims;
+            var email = emailClaim.FirstOrDefault((p) => p.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/upn").Value;
+
+            DataTable returnDataTable = new DataTable();
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = connection;
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "ShowEmployeForApproverM"; // Updated the procedure name
+                cmd.Parameters.Add(new SqlParameter("@EmployeeEmail", email)); // Pass email directly as a parameter
+
+                SqlDataAdapter dataAdp = new SqlDataAdapter(cmd);
+                dataAdp.Fill(returnDataTable);
+
+                connection.Close();
+            }
+
+            return returnDataTable;
+        }
+
+
+        public List<AllEmployee> ConvertTableIntoModels(DataTable returnDataTable)
+        {
+            List<AllEmployee> objectList = new List<AllEmployee>();
+
+            foreach (DataRow dr in returnDataTable.Rows)
+            {
+                AllEmployee newObj = new AllEmployee();
+
+                newObj.ApprovalTaskId = Convert.ToInt32(dr["ApprovalTaskId"]);
+                newObj.EmployeeName = dr["EmployeeName"].ToString();
+                newObj.PlannerName = dr["PlannerName"].ToString();
+                newObj.ApproverName = dr["ApproverName"].ToString();
+                newObj.ApprovalStatus = dr["ApprovalStatus"].ToString();
+                newObj.CreatedOn = dr["CreatedOn"].ToString();
+
+               
+                objectList.Add(newObj);
+            }
+            return objectList;
+        }
+        
+
+        // fn to convert data into json
+        public IActionResult ApproverJSONEmployeeData()
+        {
+            var Data = ConvertTableIntoModels(ApproverEmployeeData());
+            return Ok(Data);
+        }
+
+
+        //fn ends here
+
+        public IActionResult ApproverView() {
+          //  var data = AddDataIntoTaskTable();
+           
+            return View("ApproverView");
+           }
+
+
+        // fn to update(change) the employee assigned status into approved status
+        public DataTable UpdateEmployeeAssignedStatus(List<AllEmployee> employeeList)
+
+        {
+
+            var returnDataTable = new DataTable();
+            var JSONData = JsonConvert.SerializeObject(employeeList);
+            using (SqlConnection connection = new SqlConnection(connectionString))
+
+            {
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand();
+
+                cmd.Connection = connection;
+
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.CommandText = "ChangeStatusToApprovedB";  //  ChangeStatusToCompleted_a  // Use the name of your stored procedure
+
+                cmd.Parameters.Add(new SqlParameter("@JsonEmployee", JSONData));
+
+                SqlDataAdapter dataAdp = new SqlDataAdapter(cmd);
+
+                dataAdp.Fill(returnDataTable);
+
+                connection.Close();
+
+            }
+            return returnDataTable;
+
+
+        }
+
+        [HttpPost]
+        public IActionResult UpdateAssignedStatusToApproved(List<AllEmployee> employeeList)
+        {
+           
+
+            var data = UpdateEmployeeAssignedStatus(employeeList);
+            if (data != null)
+            {
+                return Ok();
+            }
+            return BadRequest();
+        }
+
+        // fn ends here
 
 
         public IActionResult EmployeeList()

@@ -1,0 +1,38 @@
+﻿@model List<AllEmployee>
+
+@{
+    ViewData["Title"] = "Approve_Page";
+}
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<!--Data Table-->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="~/js/Approver.js"></script>
+<script src="~/js/employeePlanning.js"></script>
+<!--<script src="~/js/employeeDetail.js"></script>-->
+
+@if (User.IsInRole("approver"))
+{
+    <button type="button" onclick="ChangeAssignedStatus(event)" class="btn btn-info m-2">Approve</button>
+}
+<!--<button type="button" onclick="ChangeAssignedStatus(event)" class="btn btn-info m-2">Approve</button>-->
+
+
+
+<table id="dataTable2" class="display" style="width:100%">
+
+    <thead>
+        <tr>
+
+            <th> employeeName</th>
+            <th>plannerName</th>
+            <th>approverName</th>
+            <th>approvalStatus</th>
+            <th>createdOn</th>      
+
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>

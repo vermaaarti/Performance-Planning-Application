@@ -23,11 +23,24 @@ namespace AADTask.Models
         public string? planneremail { get; set; }
 
 
+        public string? approver { get; set; }
+
+
         public string? performanceChallenges { get; set; }
      
 
         public string? StatusOfPlanning { get; set; }
 
+
+      public int ApprovalTaskId  { get; set; }
+         public int ApproverId { get; set; }
+      public string? ApproverName { get; set; }
+        public int PlannerId { get; set; }
+         public string? ApprovalStatus { get; set; }
+        public string? CreatedOn { get; set; }
+
+
+      
 
 
 
@@ -64,5 +77,13 @@ namespace AADTask.Models
         No_challenges
     }
 
+    public enum Approvr
+    {
+        Ruchir,
+        Chandan,
+        Rachana
+    }
+
+    
 
 }
