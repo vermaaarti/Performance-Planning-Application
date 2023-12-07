@@ -192,14 +192,6 @@ function AddNewEmployee(event) {
 }
 
 
-
-
-
-
-
-
-
-
 function CheckStatusOfPlanningIsDraft(globalArray) {
  
    /* for (var i = 0; i < globalArray.length; i++) {
