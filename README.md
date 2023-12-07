@@ -5,9 +5,14 @@ A .net MVC application to plan/track the performance of employees.
 
 <h2>Performance Planning Application</h2>
 
+How It Works :
+In performance Planning Application, there are multiple roles. First role is "Admin", Admin can see all employees data, Second Role in "Planner", Planner can see only the employees for whom he is planner and the Third role is "Approver", Approver can see the employees for whom he is approver. 
+The first step is login, based on login employee data gets printed in the screen and based on admin/planner/approver, you can see different button to perform various operations.
+
+
 Authentication : Azure AD Authentication
 
-Roles : Planner, Admin, Approver
+Roles : Admin, Planner, Approver
 
 Pages :
 
