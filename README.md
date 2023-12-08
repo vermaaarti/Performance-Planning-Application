@@ -1,17 +1,22 @@
 # Performance-Planning-Application
 
-An MVC application to plan/track the performance of employees.
+A .net MVC application to plan/track/approve the performance of employees.
 
 
-<h2>Performance Planning Application</h2>
+How It Works :
+
+
+In performance Planning Application, there are multiple roles. First role is "Admin", Admin can see all employees data, Second Role in "Planner", Planner can see only the employees for whom he is planner and the Third role is "Approver", Approver can see the employees for whom he is approver. 
+The first step is login, based on login employee data gets printed in the screen and based on admin/planner/approver, you can see different button to perform various operations.
+
 
 Authentication : Azure AD Authentication
 
-Roles : Planner, Admin, Approver
+Roles : Admin, Planner, Approver
 
 Pages :
 
- Employee Master(Admin Page)
+Employee Master(Admin Page)
 
   1. It is accessible only by the admin.
   2.  When logged in user is an admin, they would be able to see all the employees.
@@ -23,7 +28,7 @@ Pages :
 
 
 
-     Performance Planner(Planner Page)
+Performance Planner(Planner Page)
 
 1. It displays a table of employees with columns : EmployeeName(hyperlink), Email, ManagerName, Department, PlannerName, Performance Challenge(Input type dropdown : "Training Required", "Was/Is in PIP" , "No certification", "No challenges"), Performance Rating(Input type dropdown : Poor, Satisfactory,Good, Excellent), 
   "Status", StatusOfPlanning etc.
@@ -34,7 +39,7 @@ Pages :
 6. Both admins and planners can see "Save As Draft" button, which will enable them to save changes(Performance Rating) of employees.
 
 
-      Performance Approver(Approver Page)
+Performance Approver(Approver Page)
 
   1. It displays a table of employees with columns : EmployeeName, PlannerName, ApproverName, ApprovalStatus, CreatedOn
   2. When logged in user is an approver, they would be able to see only list of employees for whom they are approver.
