@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\customapps\\file---to---run\\AADTask\\AADTask\\AADTask.csproj": {}
+    "D:\\customapps\\file---to---run\\working-on-it\\AADTask\\AADTask\\AADTask.csproj": {}
   },
   "projects": {
-    "D:\\customapps\\file---to---run\\AADTask\\AADTask\\AADTask.csproj": {
+    "D:\\customapps\\file---to---run\\working-on-it\\AADTask\\AADTask\\AADTask.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\customapps\\file---to---run\\AADTask\\AADTask\\AADTask.csproj",
+        "projectUniqueName": "D:\\customapps\\file---to---run\\working-on-it\\AADTask\\AADTask\\AADTask.csproj",
         "projectName": "AADTask",
-        "projectPath": "D:\\customapps\\file---to---run\\AADTask\\AADTask\\AADTask.csproj",
+        "projectPath": "D:\\customapps\\file---to---run\\working-on-it\\AADTask\\AADTask\\AADTask.csproj",
         "packagesPath": "C:\\Users\\aarti_verma\\.nuget\\packages\\",
-        "outputPath": "D:\\customapps\\file---to---run\\AADTask\\AADTask\\obj\\",
+        "outputPath": "D:\\customapps\\file---to---run\\working-on-it\\AADTask\\AADTask\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\aarti_verma\\AppData\\Roaming\\NuGet\\NuGet.Config",

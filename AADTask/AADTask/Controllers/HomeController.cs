@@ -198,7 +198,7 @@ namespace AADTask.Controllers
 
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.CommandText = "AddDataIntoApproverTableF"; // Use the name of your stored procedure
+                cmd.CommandText = "AddDataIntoApproverTableT"; // Use the name of your stored procedure
 
                 cmd.Parameters.Add(new SqlParameter("@ApproverEmail", email));
 
@@ -231,11 +231,9 @@ namespace AADTask.Controllers
         [HttpPost]
         public IActionResult UpdateStatusToCompleted(List<AllEmployee> employeeList)
         {
-            // Call the procedure to change the status of planning
-         
+            
             var data = UpdateEmployeeStatus(employeeList);
-            // var data2 = AddDataIntoTaskTable(employeeList);
-            // if (data != null && data2 != null)
+            
             if (data != null)
             {
                 return Ok();
@@ -427,6 +425,10 @@ namespace AADTask.Controllers
         public DataTable UpdateEmployeeAssignedStatus(List<AllEmployee> employeeList)
 
         {
+            var claimsIdentity = User.Identities.FirstOrDefault();
+            var emailClaim = claimsIdentity?.Claims;
+            var email = emailClaim.FirstOrDefault((p) => p.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/upn").Value;
+
 
             var returnDataTable = new DataTable();
             var JSONData = JsonConvert.SerializeObject(employeeList);
@@ -441,9 +443,11 @@ namespace AADTask.Controllers
 
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.CommandText = "ChangeStatusToApprovedB";  //  ChangeStatusToCompleted_a  // Use the name of your stored procedure
+                cmd.CommandText = "ChangeStatusToApprovedI";  //  ChangeStatusToCompleted_a  // Use the name of your stored procedure
 
                 cmd.Parameters.Add(new SqlParameter("@JsonEmployee", JSONData));
+
+                cmd.Parameters.Add(new SqlParameter("@ApproverEmail", email));
 
                 SqlDataAdapter dataAdp = new SqlDataAdapter(cmd);
 
@@ -471,6 +475,66 @@ namespace AADTask.Controllers
         }
 
         // fn ends here
+
+
+
+        // fn to update(change) the approvalStatus from assigned to Unassigned
+        public DataTable UpdateAssignedToUnassigned()
+
+        {
+           
+            var returnDataTable = new DataTable();
+            //var JSONData = JsonConvert.SerializeObject();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+
+            {
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand();
+
+                cmd.Connection = connection;
+
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.CommandText = "ChangeStatusToUnassignedB"; // Use the name of your stored procedure
+
+                SqlDataAdapter dataAdp = new SqlDataAdapter(cmd);
+
+                dataAdp.Fill(returnDataTable);
+
+                connection.Close();
+
+            }
+            return returnDataTable;
+
+
+        }
+
+        [HttpPost]
+        public IActionResult UpdateAssignedStatusToUnassigned()
+        {
+
+
+            var data = UpdateAssignedToUnassigned();
+            if (data != null)
+            {
+                return Ok();
+            }
+            return BadRequest();
+        }
+
+        // fn ends here
+
+
+
+
+
+
+
+
+
+
+
 
 
         public IActionResult EmployeeList()

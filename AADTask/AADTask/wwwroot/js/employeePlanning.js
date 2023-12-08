@@ -51,10 +51,7 @@ function Submit(event) {
         }
     });
 
-   // CheckStatusOfPlanningIsDraft();
-   // $("#btnToSubmitStatusOfPlanning").hide();
-
-}
+   }
 
 function checkAllRatingsSelected() {
     var allRatingsSelected = true;

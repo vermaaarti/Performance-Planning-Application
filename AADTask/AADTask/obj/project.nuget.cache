@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "WfsKrIfHGOoVAyz3eNzRsFHB5mFLw6AGl2uhZxpqCJTP/5cJyoxzHOiZa7b3si0FhZmeT/k5SAgqDLm0Chhg1w==",
+  "dgSpecHash": "dHOhmggl5A/J+dl3PzB9SEyzWLe+2AGzMujXonlIxhaHPo6lBvG1YjG+D9TdGzt6M+3h6o7KEVfhYG2Yb4pH2w==",
   "success": true,
-  "projectFilePath": "D:\\customapps\\file---to---run\\AADTask\\AADTask\\AADTask.csproj",
+  "projectFilePath": "D:\\customapps\\file---to---run\\working-on-it\\AADTask\\AADTask\\AADTask.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\aarti_verma\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\aarti_verma\\.nuget\\packages\\azure.identity\\1.10.2\\azure.identity.1.10.2.nupkg.sha512",

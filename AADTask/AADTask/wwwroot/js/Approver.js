@@ -80,7 +80,7 @@ function ChangeAssignedStatus(event) {
 
             console.log(ApproverArray);
             location.reload(true);
-            window.location.href = "/Home/GetEmployeeData/";
+           // window.location.href = "/Home/GetEmployeeData/";
 
         },
         error: function (errorThrown, textStatus, xhr) {
@@ -94,4 +94,25 @@ function ChangeAssignedStatus(event) {
 function GoToApproval(event) {
     event.preventDefault();
     window.location.href = "/Home/ApproverView/";
+}
+
+
+
+function SendBackToPlanner(event) {
+    $.ajax({
+        type: 'POST',
+        url: '/Home/UpdateAssignedStatusToUnassigned',
+        data: { employeeList: ApproverArray },
+        success: function () {
+            alert('Status of approval changed from assigned to unassigned');
+
+            console.log(ApproverArray);
+            location.reload(true);
+             window.location.href = "/Home/GetEmployeeData/";
+
+        },
+        error: function (errorThrown, textStatus, xhr) {
+            console.log('Error in Operation');
+        }
+    });
 }
