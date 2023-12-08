@@ -45,4 +45,6 @@ Performance Approver(Approver Page)
   2. When logged in user is an approver, they would be able to see only list of employees for whom they are approver.
   3. By default, approver will be able to see 'Go to Approve Page' button, which will redirect them to the page where approver will see the employees for whom he/she is approver(if there exist any employee).
   4. Approver will be able to see the 'Approve' button which will change the approveStatus from 'Assigned'(default) to 'Approved'.
-  5. When the status gets 'Approved' the approver should not be able to see the record of employee's. 
+  5. When the status gets 'Approved' the approver should not be able to see the record of employee's.
+  6. Approver will be able to see the 'Send Back' button which will change the approveStatus from 'Assigned'(default) to 'Unassigned' and the statusOfPlanning to 'draft' from 'InProgress' from the EmployeeMaster Table.
+
