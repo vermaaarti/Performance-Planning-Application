@@ -53,7 +53,8 @@ values
 (4, 4, 2),
 (5, 5, 3),
 (6, 6, 2),
-(7, 2, 2)
+(7, 2, 2),
+(8, 4, 3)
 
 
 
@@ -98,7 +99,7 @@ CREATE PROCEDURE EmployeeRolesInfos
          ruchir                                     approver
 		  ravi                                        planner
 		  rachana                                     approver
-		  vivek                                       planner
+		  vivek                                       planner  & approver
 
 */
  -------------------------------------------AAD part ends here --------------------------------------------------------------------
@@ -460,34 +461,7 @@ select * from EmployeeMaster_arti
 --///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-/*CREATE PROCEDURE AddDataIntoApproverTableF
-@EmpJson NVARCHAR(MAX),
-@ApproverEmail NVARCHAR(MAX) 
-AS
-BEGIN
-    DECLARE @ApproverId INT;
-    DECLARE @EmployeeId INT;
- 
-    -- Get the ApproverId 
-    SELECT @ApproverId = EmployeeId FROM EmployeeMaster_arti WHERE EmployeeEmail = @ApproverEmail;
- 
-    -- Insert data into ApprovalTask_aarti table
-    INSERT INTO ApprovalTask_aarti (EmployeeId, PlannerId, ApproverId, ApprovalStatus, CreatedOn)
-    SELECT EmployeeId, PlannerId, ApproverId, 'Assigned', GETUTCDATE()
-    FROM OPENJSON(@EmpJson)
-    WITH (
-        EmployeeId INT '$.EmployeeId',
-        PlannerId INT '$.PlannerId',
-        ApproverId INT '$.ApproverId'
-    )
-    WHERE ApproverId = @ApproverId;
- 
- END*/
-
-
-
-
+/*
 CREATE PROCEDURE [dbo].[AddDataIntoApproverTableT]
     @EmpJson NVARCHAR(MAX),
     @ApproverEmail NVARCHAR(MAX)
@@ -540,8 +514,58 @@ BEGIN
     -- Drop the temporary table
     DROP TABLE #TempData;
 END
+        */
 
  
+
+ CREATE PROCEDURE [dbo].[AddDataIntoApproverTableU]
+    @EmpJson NVARCHAR(MAX),
+    @ApproverEmail NVARCHAR(MAX)
+AS
+BEGIN
+    DECLARE @ApproverId INT;
+ 
+    -- Get the ApproverId based on the provided email
+    SELECT @ApproverId = EmployeeId
+    FROM EmployeeMaster_arti
+    WHERE EmployeeEmail = @ApproverEmail;
+ 
+    -- Create a temporary table to hold the incoming data
+    CREATE TABLE #TempData (EmployeeId INT, PlannerId INT, ApproverId INT);
+ 
+    -- Insert data into the temporary table
+    INSERT INTO #TempData (EmployeeId, PlannerId, ApproverId)
+    SELECT EmployeeId, PlannerId, ApproverId
+    FROM OPENJSON(@EmpJson) WITH (
+        EmployeeId INT '$.EmployeeId',
+        PlannerId INT '$.PlannerId',
+        ApproverId INT '$.ApproverId'
+    );
+ 
+    -- Update existing records in ApprovalTask_aarti table
+    UPDATE a
+    SET ApprovalStatus = 'Assigned'
+    FROM ApprovalTask_aarti a
+    INNER JOIN #TempData t ON a.EmployeeId = t.EmployeeId
+    WHERE a.ApproverId = @ApproverId;
+ 
+    -- Insert new records into ApprovalTask_aarti table
+    INSERT INTO ApprovalTask_aarti (EmployeeId, PlannerId, ApproverId, ApprovalStatus, CreatedOn)
+    SELECT t.EmployeeId, t.PlannerId, t.ApproverId, 'Assigned', GETUTCDATE()
+    FROM #TempData t
+    WHERE NOT EXISTS (
+        SELECT 1
+        FROM ApprovalTask_aarti a
+        WHERE a.EmployeeId = t.EmployeeId AND a.ApproverId = @ApproverId
+    );
+ 
+    -- Drop the temporary table
+    DROP TABLE #TempData;
+END
+
+
+
+
 
 
 
@@ -688,7 +712,7 @@ BEGIN
     SET ApprovalStatus = 'Unassigned'
     WHERE ApprovalStatus = 'Assigned';
  
-    -- Update StatusOfPlanning to 'Draft' where it is currently 'In Progress'
+    -- Update StatusOfPlanning to 'Draft' where it is currently 'InProgress'
     UPDATE EmployeeMaster_arti
     SET StatusOfPlanning = 'draft'
     WHERE StatusOfPlanning = 'InProgress';

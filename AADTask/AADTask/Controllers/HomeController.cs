@@ -198,7 +198,7 @@ namespace AADTask.Controllers
 
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.CommandText = "AddDataIntoApproverTableT"; // Use the name of your stored procedure
+                cmd.CommandText = "AddDataIntoApproverTableU"; // Use the name of your stored procedure
 
                 cmd.Parameters.Add(new SqlParameter("@ApproverEmail", email));
 

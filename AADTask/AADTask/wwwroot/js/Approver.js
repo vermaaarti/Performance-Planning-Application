@@ -1,9 +1,10 @@
 ﻿let ApproverArray = [];
+let approverdataTable;
 
 
 $(document).ready(function () {
 
-    let approverdataTable = intilizeApproverDataTable(ApproverArray);
+     approverdataTable = intilizeApproverDataTable(ApproverArray);
     loadApproverDataIntoDataTable(approverdataTable);
 
 });
@@ -116,3 +117,33 @@ function SendBackToPlanner(event) {
         }
     });
 }
+
+
+function FilterApprover(event) {
+    event.preventDefault();
+  
+    var inputPlanner = $("#FilterForApproval").val();
+    console.log(inputPlanner);
+
+    var filteredPlanner = ApproverArray.filter(item => item.plannerName === inputPlanner)
+
+    console.log(filteredPlanner);
+
+    if (filteredPlanner.length == 0) {
+        approverdataTable.clear();
+        approverdataTable.draw();
+        alert("no data found");
+    }
+    else {
+    
+        approverdataTable.clear();
+        filteredPlanner.forEach(function (data) {
+            approverdataTable.row.add(data);
+        });
+        approverdataTable.draw();
+    }
+
+}
+
+
+  
