@@ -12,31 +12,18 @@
 <script src="~/js/employeePlanning.js"></script>
 <!--<script src="~/js/employeeDetail.js"></script>-->
 
+
 @if (User.IsInRole("approver"))
 {
     <button type="button" onclick="ChangeAssignedStatus(event)" class="btn btn-info m-2">Approve</button>
     <button type="button" onclick="SendBackToPlanner(event)" class="btn btn-info m-2">Send Back</button>
-   <button type="button" onclick="FilterApprover(event)" class="btn btn-info m-2">
-      <div class="m"><select class="form-select bg-info" onclick="FilterApprover(event)" aria-label="Default select example" id="FilterForApproval">
-           <option value="Chandan">Chandan</option>
-            <option value="Vivek">Vivek</option>
-        </select></div>
-    </button>
-    <!--<div onchange="FilterApprover(event)" class="dropdown">
-        <button class="btn btn-info dropdown-toggle" type="button" id="FilterForApproval" data-bs-toggle="dropdown" aria-expanded="false">
-            Dropdown button
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li><a class="dropdown-item" href="#" value="Chandan">Chandan</a></li>
-            <li><a class="dropdown-item" href="#" value="Vivek">Vivek</a></li>
-            </ul>
-    </div>-->
-
+    
+    <select class="bg-info" onclick="FilterApprover(event)" id="FilterForApproval">
+        
+    </select>
    }
-<!--<button type="button" onclick="ChangeAssignedStatus(event)" class="btn btn-info m-2">Approve</button>-->
 
-
-
+<body onload="BindPlannerNameInDropdown()">
 <table id="dataTable2" class="display" style="width:100%">
 
     <thead>
@@ -53,3 +40,4 @@
     <tbody>
     </tbody>
 </table>
+</body>

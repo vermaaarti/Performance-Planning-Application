@@ -32,8 +32,6 @@ function loadDataIntoDataTable({ dataTable }) {
 }
 
 
-
-
 function intilizeDataTable(globalArray) {
     return new DataTable('#dataTable', {
         data: globalArray,
@@ -139,17 +137,6 @@ function SaveEmployee(event) {
 }
 
 
-/*function SaveAsDraft(employeeId) {
-    // Find the specific employee in globalArray based on the employeeId
-    const employee = globalArray.find(e => e.employeeId == employeeId);
-
-    if (employee) {
-        // Update the performance rating for the specific employee
-        employee.performanceRating = $('#performanceRatingDropdown' + employeeId).val();
-    }
-
-}*/
-
 function SaveAsDraft(employeeId) {
 
       // Use map to update the performance rating & performance challenge for the specific employee
@@ -202,8 +189,7 @@ function CheckStatusOfPlanningIsDraft(globalArray) {
     }*/
     globalArray.forEach(function (item) {
         if (item.statusOfPlanning === 'InProgress') {
-            console.log("hii there");
-            $("#btnToSubmitStatusOfPlanning").hide();
+        $("#btnToSubmitStatusOfPlanning").hide();
         }
     });
     

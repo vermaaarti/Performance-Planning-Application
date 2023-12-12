@@ -526,6 +526,68 @@ namespace AADTask.Controllers
         // fn ends here
 
 
+        // fn to get the planner name to bind into the dropdown 
+
+        public DataTable DistinctPlannerNames()
+
+        {
+
+            var returnDataTable = new DataTable();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+
+            {
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand();
+
+                cmd.Connection = connection;
+
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.CommandText = "GetDistinctPlannerNames"; // Use the name of your stored procedure
+
+                SqlDataAdapter dataAdp = new SqlDataAdapter(cmd);
+
+                dataAdp.Fill(returnDataTable);
+
+                connection.Close();
+
+            }
+            return returnDataTable;
+
+
+        }
+
+        public List<AllEmployee> ConvertPlannerNamesIntoList(DataTable returnDataTable)
+        {
+            List<AllEmployee> plannerList = new List<AllEmployee>();
+
+            foreach (DataRow dr in returnDataTable.Rows)
+            {
+                AllEmployee newObj = new AllEmployee();
+
+                newObj.PlannerId = Convert.ToInt32(dr["PlannerId"]);
+                newObj.PlannerName = dr["PlannerName"].ToString();
+
+                plannerList.Add(newObj);
+            }
+            return plannerList;
+        }
+
+        [HttpPost]
+        public IActionResult GetDistinctPlannerNames()
+        {
+
+
+            var data = ConvertPlannerNamesIntoList(DistinctPlannerNames());
+            if (data != null)
+            {
+                return Ok(data);
+            }
+            return BadRequest();
+        }
+
+        // fn ends here
 
 
 

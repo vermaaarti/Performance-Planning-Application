@@ -1,5 +1,6 @@
 ﻿let ApproverArray = [];
 let approverdataTable;
+let PlannerArray;
 
 
 $(document).ready(function () {
@@ -119,31 +120,67 @@ function SendBackToPlanner(event) {
 }
 
 
-function FilterApprover(event) {
-    event.preventDefault();
-  
+function FilterApprover() {
     var inputPlanner = $("#FilterForApproval").val();
-    console.log(inputPlanner);
-
-    var filteredPlanner = ApproverArray.filter(item => item.plannerName === inputPlanner)
-
-    console.log(filteredPlanner);
+    var filteredPlanner = ApproverArray.filter(item => item.plannerName === inputPlanner);
 
     if (filteredPlanner.length == 0) {
         approverdataTable.clear();
         approverdataTable.draw();
-        alert("no data found");
-    }
-    else {
-    
+        alert("No data found");
+    } else {
         approverdataTable.clear();
         filteredPlanner.forEach(function (data) {
             approverdataTable.row.add(data);
         });
         approverdataTable.draw();
     }
+}
 
+function BindPlannerNameInDropdown() {
+    $.ajax({
+        type: 'POST',
+        url: '/Home/GetDistinctPlannerNames',
+        contentType: 'application/json',
+        dataType: 'json',
+        success: function (data) {
+            PlannerArray = data.map(planner => planner.plannerName);
+            BindPlannerName(PlannerArray);
+
+            // Set default planner when the page loads
+            if (PlannerArray.length > 0) {
+                var defaultPlanner = PlannerArray[0];
+                $("#FilterForApproval").val(defaultPlanner);
+                FilterApprover(); 
+            }
+
+            console.log(PlannerArray);
+        },
+        error: function (errorThrown, textStatus, xhr) {
+            console.log('Error in Operation');
+        }
+    });
+}
+
+function BindPlannerName(PlannerArray) {
+    let select = document.getElementById("FilterForApproval");
+
+    // Clear existing options
+    select.innerHTML = "<option>Dropdown Items</option>";
+
+    for (let i = 0; i < PlannerArray.length; i++) {
+        let plannerName = PlannerArray[i];
+        let el = document.createElement("option");
+
+        // Set both text content and value
+        el.textContent = plannerName;
+        el.value = plannerName;
+
+        select.appendChild(el);
+    }
 }
 
 
-  
+
+
+

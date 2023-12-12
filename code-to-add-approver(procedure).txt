@@ -163,7 +163,7 @@ CREATE TABLE EmployeeMaster_arti (
 insert into EmployeeMaster_arti(EmployeeEmail, EmployeeName, ManagerId, PlannerId, ApproverId, Department, IsAdmin, PerformanceRatingId, PerformanceRating, StatusOfPlanning, performanceChallenges, IsEligibleForPlanning)  
 values
 ('aarti_verma@amicusglobal.com', 'Aarti', 2, 5, 5, 'CS', 1, 1,'Poor', 'draft', 'Training Required', 0),
-('ruchir_verma@amicusglobal.com', 'Ruchir', 4, 5, 8, 'CS', 0, 2, 'Satisfactory', 'draft','Was/Is in PIP', 1),
+('ruchir_verma@amicusglobal.com', 'Ruchir', 4, 8, 8, 'CS', 0, 2, 'Satisfactory', 'draft','Was/Is in PIP', 1),
 ('sharma_srishti@amicusglobal.com', 'Srishti', 4, 8, 5, 'IT', 2, 2, 'Poor', 'draft','Training Required', 1),
 ('ravi_kukreja@amicusglobal.com', 'Ravi', 4, 5, 5, 'CS', 2,  4, 'Excellent', 'draft', 'Was/Is in PIP', 1),
 ('chandan_soni@amicusglobal.com', 'Chandan',2, 8, 2, 'IT', 2, 4,'Good', 'draft', 'Training Required', 1) ,      
@@ -717,3 +717,38 @@ BEGIN
     SET StatusOfPlanning = 'draft'
     WHERE StatusOfPlanning = 'InProgress';
 END
+
+
+
+
+--//////////////////////////// procedure to get planners name for data binding /////////////////////////////////////////
+--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+CREATE PROCEDURE [dbo].[GetDistinctPlannerNames]
+AS
+BEGIN
+    -- Created a temporary table to store distinct PlannerId values
+    CREATE TABLE #DistinctPlannerIds (PlannerId INT);
+ 
+    -- Insert distinct PlannerId values from ApprovalTask_aarti table
+    INSERT INTO #DistinctPlannerIds(PlannerId)
+    SELECT DISTINCT PlannerId
+    FROM ApprovalTask_aarti;
+ 
+    -- Fetch PlannerId and corresponding PlannerName from EmployeeMaster_arti
+    SELECT DISTINCT
+        d.PlannerId,
+        e.EmployeeName AS PlannerName
+    FROM #DistinctPlannerIds d
+    INNER JOIN EmployeeMaster_arti e ON d.PlannerId = e.EmployeeId;
+ 
+    -- Drop the temporary table
+    DROP TABLE #DistinctPlannerIds;
+END
+
+
+--/////////////////////////  execute //////////////////////////////////////////////////////////
+
+exec  [dbo].[GetDistinctPlannerNames];
