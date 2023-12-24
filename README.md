@@ -1,6 +1,6 @@
 # Performance-Planning-Application
 
-A .net MVC application to plan/track/approve the performance of employees.
+A .net MVC application to plan/track/approve/ReApprove the performance of employees.
 
 
 How It Works :
