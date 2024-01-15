@@ -59,7 +59,7 @@ function intilizeDataTable(globalArray) {
             {
                 "render": function (data, type, row) { 
 
-                    if (row.statusOfPlanning === "InProgress") {
+                    if (row.statusOfPlanning === "InProgress" || row.statusOfPlanning === "Completed") {
                         
                         return `<span>${row.performanceChallenges}</span>`;
 
@@ -81,7 +81,7 @@ function intilizeDataTable(globalArray) {
             {
                 "render": function (data, type, row) {  // window.location.href()
 
-                    if (row.statusOfPlanning === "InProgress") {
+                    if (row.statusOfPlanning === "InProgress" || row.statusOfPlanning === "Completed") {
                         //  flag = 1;
                         return `<span>${row.performanceRating}</span>`;
 
@@ -153,20 +153,6 @@ function SaveAsDraft(employeeId) {
 }
 
 
-/*function SaveAsDraftToPerformanceChallenges(employeeId) {
-    // Use map to update the performance rating for the specific employee
-    globalArray = globalArray.map(employee => {
-        if (employee.employeeId === employeeId) {
-            return {
-                ...employee,
-                performanceChallenges: $('#performanceChallengesDropdown' + employeeId).val()
-            };
-        }
-        return employee;
-    });
-}*/
-
-
 
 // fn to redirect into method to add new employee
 function AddNewEmployee(event) {
@@ -180,18 +166,15 @@ function AddNewEmployee(event) {
 
 
 function CheckStatusOfPlanningIsDraft(globalArray) {
- 
-   /* for (var i = 0; i < globalArray.length; i++) {
-        if (globalArray[i].statusOfPlanning === 'InProgress') {
-            console.log("hii there");
-            $("#btnToSubmitStatusOfPlanning").hide();
-        }
-    }*/
-    globalArray.forEach(function (item) {
-        if (item.statusOfPlanning === 'InProgress') {
-        $("#btnToSubmitStatusOfPlanning").hide();
-        }
+     var showButton = globalArray.some(function (item) {
+        return item.statusOfPlanning === 'draft';
     });
+
+    if (showButton) {
+        $("#btnToSubmitStatusOfPlanning").show();
+    } else {
+        $("#btnToSubmitStatusOfPlanning").hide();
+    }
     
 }
 

@@ -88,7 +88,7 @@ function ValidateForm() {
     }
 
 
-    if (employeeId && employeeName && employeeEmail && managerName && department && plannerName && approver) {
+    if (employeeId && employeeName && employeeEmail && managerName && department && plannerName) {
         return true;
     }
     else {
@@ -124,7 +124,8 @@ function checkStatusOfPlanning() {
     // Check if the value is 'InProgress' and hide the button accordingly
     if (employeeStatusOfPlanningValue === 'InProgress') {
         $("#bnttosubmitdata").hide();
-    }
+    }  
+  
 }
 
 

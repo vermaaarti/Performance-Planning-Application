@@ -15,6 +15,8 @@ namespace AADTask.Controllers
     [Authorize]
     public class HomeController : Controller
     {
+        private static bool hasPlanningStatusUpdated = false;
+
         private readonly string connectionString;
         public HomeController(IConfiguration config)
         {
@@ -52,10 +54,10 @@ namespace AADTask.Controllers
         {
 
             var claimsIdentity = User.Identities.FirstOrDefault();
-            
-                var emailClaim = claimsIdentity?.Claims;
-               
-                    var email = emailClaim.FirstOrDefault((p) => p.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/upn").Value;
+
+            var emailClaim = claimsIdentity?.Claims;
+
+            var email = emailClaim.FirstOrDefault((p) => p.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/upn").Value;
 
             DataTable returnDataTable = new DataTable();
 
@@ -69,9 +71,9 @@ namespace AADTask.Controllers
 
                 cmd.Connection = connection;
 
-                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandType = CommandType.StoredProcedure;  //procedureToGetEmployeeData_aartiL 
 
-                cmd.CommandText = "procedureToGetEmployeeData_aartiL"; // Use the name of your stored procedure
+                cmd.CommandText = "procedureToGetEmployeeDataC"; // Use the name of your stored procedure
 
                 cmd.Parameters.Add(new SqlParameter("@Email", email));
 
@@ -85,11 +87,9 @@ namespace AADTask.Controllers
 
             return returnDataTable;
 
-         }
+        }
 
-
-
-       public List<AllEmployee> ConvertTableIntoModel(DataTable returnDataTable)
+        public List<AllEmployee> ConvertTableIntoModel(DataTable returnDataTable)
         {
             List<AllEmployee> objectList = new List<AllEmployee>();
 
@@ -97,7 +97,7 @@ namespace AADTask.Controllers
             {
                 AllEmployee newObj = new AllEmployee();
 
-                newObj.EmployeeId = Convert.ToInt32(dr["EmployeeId"]);
+                /*newObj.EmployeeId = Convert.ToInt32(dr["EmployeeId"]);
                 newObj.EmployeeName = dr["EmployeeName"].ToString();
                 newObj.EmployeeEmail = dr["EmployeeEmail"].ToString();
                 newObj.ManagerName = dr["ManagerName"].ToString();
@@ -108,6 +108,23 @@ namespace AADTask.Controllers
                 newObj.StatusOfPlanning = dr["StatusOfPlanning"].ToString();
                 newObj.PlannerId = Convert.ToInt32(dr["PlannerId"]);
                 newObj.ApproverId = Convert.ToInt32(dr["ApproverId"]);
+                newObj.ApproverTwoId = Convert.ToInt32(dr["ApproverTwoId"]);
+                newObj.CreatedOn = dr["CreatedOn"].ToString();
+                newObj.ApprovalStatus = dr["ApprovalStatus"].ToString();*/
+
+                newObj.EmployeeId = Convert.ToInt32(dr["EmployeeId"]);
+                newObj.EmployeeName = dr["EmployeeName"].ToString();
+                newObj.EmployeeEmail = dr["EmployeeEmail"].ToString();
+                newObj.ManagerName = dr["ManagerName"].ToString();
+                newObj.PlannerName = dr["PlannerName"].ToString();
+                newObj.Department = dr["Department"].ToString();
+                newObj.PerformanceRating = dr["PerformanceRating"].ToString();
+                newObj.performanceChallenges = dr["performanceChallenges"].ToString();
+                newObj.StatusOfPlanning = dr["StatusOfPlanning"].ToString();
+                // Check for DBNull.Value before converting to Int32
+                newObj.PlannerId = dr["PlannerId"] != DBNull.Value ? Convert.ToInt32(dr["PlannerId"]) : 0;
+                newObj.ApproverId = dr["ApproverId"] != DBNull.Value ? Convert.ToInt32(dr["ApproverId"]) : 0;
+                newObj.ApproverTwoId = dr["ApproverTwoId"] != DBNull.Value ? Convert.ToInt32(dr["ApproverTwoId"]) : 0;
                 newObj.CreatedOn = dr["CreatedOn"].ToString();
                 newObj.ApprovalStatus = dr["ApprovalStatus"].ToString();
 
@@ -116,7 +133,7 @@ namespace AADTask.Controllers
             return objectList;
         }
 
-      
+
         // fn to convert data into json
         public IActionResult JSONEmployeeData()
         {
@@ -129,7 +146,7 @@ namespace AADTask.Controllers
         [HttpGet]
         public IActionResult GetEmployeeData()
         {
-             var filteredData = ConvertTableIntoModel(EmployeeData());
+            var filteredData = ConvertTableIntoModel(EmployeeData());
             return View("EmployeeDataList", filteredData);
         }
 
@@ -140,6 +157,11 @@ namespace AADTask.Controllers
         public DataTable UpdateEmployeeStatus(List<AllEmployee> employeeList)
 
         {
+            var claimsIdentity = User.Identities.FirstOrDefault();
+
+            var emailClaim = claimsIdentity?.Claims;
+
+            var email = emailClaim.FirstOrDefault((p) => p.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/upn").Value;
 
             var returnDataTable = new DataTable();
             var JSONData = JsonConvert.SerializeObject(employeeList);
@@ -154,10 +176,12 @@ namespace AADTask.Controllers
                 cmd.Connection = connection;
 
                 cmd.CommandType = CommandType.StoredProcedure;
+                //   ChangeStatusToInProgressI    ChangeStatusToInProgressZD 
+                cmd.CommandText = "ChangeStatusToInProgressI";  //  ChangeStatusToCompleted_a  // Use the name of your stored procedure
 
-                cmd.CommandText = "ChangeStatusToInProgress";  //  ChangeStatusToCompleted_a  // Use the name of your stored procedure
+                cmd.Parameters.Add(new SqlParameter("@EmpJson", JSONData));
 
-                cmd.Parameters.Add(new SqlParameter("@JsonEmployee", JSONData));
+                cmd.Parameters.Add(new SqlParameter("@PlannerEmail", email));
 
                 SqlDataAdapter dataAdp = new SqlDataAdapter(cmd);
 
@@ -185,7 +209,7 @@ namespace AADTask.Controllers
 
             var returnDataTable = new DataTable();
             var JSONData = JsonConvert.SerializeObject(employeeList);
-          
+
             using (SqlConnection connection = new SqlConnection(connectionString))
 
             {
@@ -196,9 +220,9 @@ namespace AADTask.Controllers
 
                 cmd.Connection = connection;
 
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                cmd.CommandText = "AddDataIntoApproverTableU"; // Use the name of your stored procedure
+                cmd.CommandType = CommandType.StoredProcedure;  
+                // AddDataIntoApprovalTaskTableJ   AddUpdateDataIntoApprovalTaskTableF         
+                cmd.CommandText = "AddDataIntoApprovalTaskTableJ"; // Use the name of your stored procedure
 
                 cmd.Parameters.Add(new SqlParameter("@ApproverEmail", email));
 
@@ -216,7 +240,45 @@ namespace AADTask.Controllers
 
         }
 
-        [HttpPost]
+
+        public DataTable AddRepeatedEmployee()
+
+        {
+            var returnDataTable = new DataTable();
+          //  var JSONData = JsonConvert.SerializeObject();
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+
+            {
+
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand();
+
+                cmd.Connection = connection;
+
+                cmd.CommandType = CommandType.StoredProcedure;
+              
+                cmd.CommandText = "AddAdditionalApproverRecordsC"; // Use the name of your stored procedure
+
+               // cmd.Parameters.Add(new SqlParameter("@ApproverEmail", email));
+
+              //  cmd.Parameters.Add(new SqlParameter("@EmpJson", JSONData));
+
+                SqlDataAdapter dataAdp = new SqlDataAdapter(cmd);
+
+                dataAdp.Fill(returnDataTable);
+
+                connection.Close();
+
+            }
+
+            return returnDataTable;
+
+        }
+
+
+         [HttpPost]
         public IActionResult AddDataIntoTaskTableForResult(List<AllEmployee> employeeList)
         {
             var data = AddDataIntoTaskTable(employeeList);
@@ -227,13 +289,14 @@ namespace AADTask.Controllers
             return BadRequest();
         }
 
-
+       
         [HttpPost]
-        public IActionResult UpdateStatusToCompleted(List<AllEmployee> employeeList)
+        public IActionResult UpdateStatusToInProgress(List<AllEmployee> employeeList)
         {
-            
+
             var data = UpdateEmployeeStatus(employeeList);
-            
+            var data2 = AddRepeatedEmployee();
+           
             if (data != null)
             {
                 return Ok();
@@ -244,7 +307,83 @@ namespace AADTask.Controllers
         // fn ends here
 
 
+        // fn to add the record when both the approvers are same
 
+      public DataTable AddSameApproverEmployee()
+
+        {
+            var returnDataTable = new DataTable();
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+
+            {
+
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand();
+
+                cmd.Connection = connection;
+
+                cmd.CommandType = CommandType.StoredProcedure;
+                //AddRecordsForDuplicateApproversH   AddRecordsForDuplicateApproversL
+                cmd.CommandText = "AddRecordsForDuplicateApproversL"; // Use the name of your stored procedure
+
+                SqlDataAdapter dataAdp = new SqlDataAdapter(cmd);
+
+                dataAdp.Fill(returnDataTable);
+
+                connection.Close();
+
+            }
+
+            return returnDataTable;
+
+        }
+
+        public DataTable CheckForSendBackCase()
+
+        {
+            var returnDataTable = new DataTable();
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+
+            {
+
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand();
+
+                cmd.Connection = connection;
+
+                cmd.CommandType = CommandType.StoredProcedure;
+                
+                cmd.CommandText = "DeleteRecordsForDuplicateApproversD"; // Use the name of your stored procedure
+
+                SqlDataAdapter dataAdp = new SqlDataAdapter(cmd);
+
+                dataAdp.Fill(returnDataTable);
+
+                connection.Close();
+
+            }
+
+            return returnDataTable;
+
+        }
+
+        [HttpPost]
+        public IActionResult AddEmployeeWhenApproversAreSame()
+        {
+              var data = AddSameApproverEmployee();
+            var data2 = CheckForSendBackCase();
+            if (data != null)
+            {
+                return Ok();
+            }
+            return BadRequest();
+        }  
+       
+        // fn ends here
 
 
         // fn to send the updated array to the database after changing the performance rating 
@@ -304,7 +443,7 @@ namespace AADTask.Controllers
 
             return View(new AllEmployee());
         }
-      
+
 
         public DataTable AddUpdateEmployee(AllEmployee employeeList)
         {
@@ -315,8 +454,8 @@ namespace AADTask.Controllers
                 connection.Open();
                 SqlCommand cmd = new SqlCommand();
                 cmd.Connection = connection;
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandText = "InsertOrUpdateEmployee";
+                cmd.CommandType = CommandType.StoredProcedure;  // InsertOrUpdateEmployee  
+                cmd.CommandText = "InsertOrUpdateEmployeeFromTableB";
                 cmd.Parameters.Add(new SqlParameter("@EmpJson", JsonData));
                 SqlDataAdapter dataAdp = new SqlDataAdapter(cmd);
                 dataAdp.Fill(returnDataTable);
@@ -330,7 +469,7 @@ namespace AADTask.Controllers
         {
             AddUpdateEmployee(empList);
 
-           
+
             return Ok();
         }
 
@@ -354,7 +493,7 @@ namespace AADTask.Controllers
 
         // fn to go to the approver page
 
-         public DataTable ApproverEmployeeData()
+        public DataTable ApproverEmployeeData()
         {
             var claimsIdentity = User.Identities.FirstOrDefault();
             var emailClaim = claimsIdentity?.Claims;
@@ -367,9 +506,9 @@ namespace AADTask.Controllers
                 connection.Open();
 
                 SqlCommand cmd = new SqlCommand();
-                cmd.Connection = connection;
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandText = "ShowEmployeForApproverM"; // Updated the procedure name
+                cmd.Connection = connection; //ShowEmployeForApproverM 
+                cmd.CommandType = CommandType.StoredProcedure;  // ShowEmployeeRecordToApproverE
+                cmd.CommandText = "ShowEmployeeRecordToApproverE"; // Updated the procedure name
                 cmd.Parameters.Add(new SqlParameter("@EmployeeEmail", email)); // Pass email directly as a parameter
 
                 SqlDataAdapter dataAdp = new SqlDataAdapter(cmd);
@@ -397,12 +536,12 @@ namespace AADTask.Controllers
                 newObj.ApprovalStatus = dr["ApprovalStatus"].ToString();
                 newObj.CreatedOn = dr["CreatedOn"].ToString();
 
-               
+
                 objectList.Add(newObj);
             }
             return objectList;
         }
-        
+
 
         // fn to convert data into json
         public IActionResult ApproverJSONEmployeeData()
@@ -415,10 +554,10 @@ namespace AADTask.Controllers
         //fn ends here
 
         public IActionResult ApproverView() {
-          //  var data = AddDataIntoTaskTable();
-           
+            //  var data = AddDataIntoTaskTable();
+
             return View("ApproverView");
-           }
+        }
 
 
         // fn to update(change) the employee assigned status into approved status
@@ -439,11 +578,11 @@ namespace AADTask.Controllers
 
                 SqlCommand cmd = new SqlCommand();
 
-                cmd.Connection = connection;
+                cmd.Connection = connection;  // ChangeStatusFromAssignToApprovedH 
 
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                cmd.CommandText = "ChangeStatusToApprovedI";  //  ChangeStatusToCompleted_a  // Use the name of your stored procedure
+                cmd.CommandType = CommandType.StoredProcedure; 
+                                                                 //R
+                cmd.CommandText = "ChangeStatusFromAssignToApprovedH";  // Use the name of your stored procedure
 
                 cmd.Parameters.Add(new SqlParameter("@JsonEmployee", JSONData));
 
@@ -461,30 +600,12 @@ namespace AADTask.Controllers
 
         }
 
-        [HttpPost]
-        public IActionResult UpdateAssignedStatusToApproved(List<AllEmployee> employeeList)
-        {
-           
-
-            var data = UpdateEmployeeAssignedStatus(employeeList);
-            if (data != null)
-            {
-                return Ok();
-            }
-            return BadRequest();
-        }
-
-        // fn ends here
-
-
-
-        // fn to update(change) the approvalStatus from assigned to Unassigned
-        public DataTable UpdateAssignedToUnassigned()
+      
+        public DataTable UpdateEmployeePlanningStatus(List<AllEmployee> employeeList)
 
         {
-           
             var returnDataTable = new DataTable();
-            //var JSONData = JsonConvert.SerializeObject();
+            var JSONData = JsonConvert.SerializeObject(employeeList);
             using (SqlConnection connection = new SqlConnection(connectionString))
 
             {
@@ -495,8 +616,87 @@ namespace AADTask.Controllers
                 cmd.Connection = connection;
 
                 cmd.CommandType = CommandType.StoredProcedure;
+                // CheckAndUpdateStatus      //ProcedureToCheckRepeatedRecordA
+                cmd.CommandText = "CheckAndUpdateStatusE";  // Use the name of your stored procedure
 
-                cmd.CommandText = "ChangeStatusToUnassignedB"; // Use the name of your stored procedure
+                SqlDataAdapter dataAdp = new SqlDataAdapter(cmd);
+
+                dataAdp.Fill(returnDataTable);
+
+                connection.Close();
+
+            }
+            return returnDataTable;
+
+
+        }
+    
+
+        [HttpPost]
+        /*  public IActionResult UpdateAssignedStatusToApproved(List<AllEmployee> employeeList)
+        {
+            var data = UpdateEmployeeAssignedStatus(employeeList);
+           // var hasPlanningStatusUpdated = false;
+
+            if (data != null)
+            {
+                // Check if the planning status has not been updated yet
+                if (hasPlanningStatusUpdated == false)
+                {
+                    var data2 = UpdateEmployeePlanningStatus(employeeList);
+
+                    // Set the flag to true to indicate that planning status has been updated
+                    hasPlanningStatusUpdated = true;
+                }  
+                
+                return Ok();
+            }
+
+            return BadRequest();
+        }    */
+
+
+         public IActionResult UpdateAssignedStatusToApproved(List<AllEmployee> employeeList)
+         {
+
+             var data =  UpdateEmployeeAssignedStatus(employeeList);
+             var data2 = UpdateEmployeePlanningStatus(employeeList);
+             if (data != null)
+             {
+                 return Ok();
+             }
+             return BadRequest();
+         }
+
+        // fn ends here
+
+
+
+        // fn to update(change) the approvalStatus from assigned to Unassigned
+        
+        public DataTable UpdateAssignedToUnassigned(List<AllEmployee> employeeList)
+
+        {
+            var claimsIdentity = User.Identities.FirstOrDefault();
+            var emailClaim = claimsIdentity?.Claims;
+            var email = emailClaim.FirstOrDefault((p) => p.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/upn").Value;
+
+
+            var returnDataTable = new DataTable();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+
+            {
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand();
+
+                cmd.Connection = connection;   // ChangeStatusToUnassignedB
+
+                cmd.CommandType = CommandType.StoredProcedure;
+                //R    ChangeStatusToUnassignedfromAssignedA
+                cmd.CommandText = "ChangeStatusToUnassignedfromAssignedI";  // Use the name of your stored procedure
+
+                cmd.Parameters.Add(new SqlParameter("@ApproverEmail", email));
 
                 SqlDataAdapter dataAdp = new SqlDataAdapter(cmd);
 
@@ -511,7 +711,19 @@ namespace AADTask.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdateAssignedStatusToUnassigned()
+        public IActionResult UpdateAssignedStatusToUnassigned(List<AllEmployee> employeeList)
+        {
+
+            var data = UpdateAssignedToUnassigned(employeeList);
+           
+            if (data != null)
+            {
+                return Ok();
+            }
+            return BadRequest();
+        }
+
+     /*   public IActionResult UpdateAssignedStatusToUnassigned()
         {
 
 
@@ -521,7 +733,7 @@ namespace AADTask.Controllers
                 return Ok();
             }
             return BadRequest();
-        }
+        }  */
 
         // fn ends here
 

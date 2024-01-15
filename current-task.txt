@@ -122,5 +122,58 @@ onchange of it --> show relevant employee data.
  
 approve and reject -->
  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+employee        approver                   isassigned
+aarti            ap1                           0/1
+aarti            ap2                           0/1
+
+
+
+
+
+
+AddDataIntoApprovalTaskTableJ -------------------------
  
+ChangeStatusToInProgressE----------------------  search this
+
+
+
+
+
+
+
+
+1. Planner separation not working in Approval Page on load, both planners data are coming.
+2. Approver 2 when same, task not getting assigned, status direcly getting changed to completed.
+3. Planner dropdown not working properly on approva page.
+4. sent back not working propery, after sent back is pressed, submit is not visible to planners.                   ---------done 
+
 

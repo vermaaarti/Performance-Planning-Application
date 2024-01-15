@@ -16,7 +16,7 @@ function Submit(event) {
         // If all ratings are selected, proceed with the AJAX request
         $.ajax({
             type: 'POST',
-            url: '/Home/UpdateStatusToCompleted',
+            url: '/Home/UpdateStatusToInProgress',
             data: { employeeList: globalArray },
             success: function () {
              
@@ -38,7 +38,7 @@ function Submit(event) {
         alert('Some performance ratings/challenges are not selected. Please select all ratings before submitting.');
     }
 
-    $.ajax({
+     /*  $.ajax({
         type: 'POST',
         url: '/Home/AddDataIntoTaskTableForResult',
         data: {employeeList:globalArray},
@@ -49,7 +49,7 @@ function Submit(event) {
         error: function (errorThrown, textStatus, xhr) {
             console.log('Error in operation: ' + errorThrown);
         }
-    });
+    });   */
 
    }
 

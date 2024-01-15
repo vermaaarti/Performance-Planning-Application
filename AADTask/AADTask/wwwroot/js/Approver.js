@@ -8,6 +8,37 @@ $(document).ready(function () {
      approverdataTable = intilizeApproverDataTable(ApproverArray);
     loadApproverDataIntoDataTable(approverdataTable);
 
+    //  when both repeated record has approved
+   /* $.ajax({
+        type: 'POST',
+        url: '/Home/UpdateAssignedStatusToApproved',
+        data: { employeeList: ApproverArray },
+        success: function () {
+          
+            console.log(ApproverArray);
+           
+        },
+        error: function (errorThrown, textStatus, xhr) {
+            console.log('Error in Operation');
+        }
+    });*/
+
+    // when both approvers are same --> case handling
+     $.ajax({
+           type: 'POST',
+         url: '/Home/AddEmployeeWhenApproversAreSame',
+           data: { employeeList: ApproverArray },
+           success: function () {
+               //alert("heeey");
+               console.log(ApproverArray);
+              
+           },
+           error: function (errorThrown, textStatus, xhr) {
+               console.log('Error in Operation');
+           }
+     });
+
+    BindPlannerNameInDropdown();
 });
 
 
@@ -42,7 +73,6 @@ function intilizeApproverDataTable(ApproverArray) {
 
             {
                 data: "employeeName",
-
             },
 
             {
@@ -82,8 +112,7 @@ function ChangeAssignedStatus(event) {
 
             console.log(ApproverArray);
             location.reload(true);
-           // window.location.href = "/Home/GetEmployeeData/";
-
+           
         },
         error: function (errorThrown, textStatus, xhr) {
             console.log('Error in Operation');
@@ -92,13 +121,10 @@ function ChangeAssignedStatus(event) {
 
 }
 
-
 function GoToApproval(event) {
     event.preventDefault();
     window.location.href = "/Home/ApproverView/";
 }
-
-
 
 function SendBackToPlanner(event) {
     $.ajax({
@@ -119,23 +145,93 @@ function SendBackToPlanner(event) {
     });
 }
 
-
+/*
 function FilterApprover() {
     var inputPlanner = $("#FilterForApproval").val();
     var filteredPlanner = ApproverArray.filter(item => item.plannerName === inputPlanner);
 
-    if (filteredPlanner.length == 0) {
-        approverdataTable.clear();
-        approverdataTable.draw();
-        alert("No data found");
-    } else {
+    // if (filteredPlanner.length == 0) {
+     //   approverdataTable.clear();
+     //   approverdataTable.draw();
+     //   alert("No data found");
+   // } else {  
         approverdataTable.clear();
         filteredPlanner.forEach(function (data) {
             approverdataTable.row.add(data);
         });
         approverdataTable.draw();
+   // }
+}  
+     */
+
+/*
+function BindPlannerNameInDropdown() {
+    $.ajax({
+        type: 'POST',
+        url: '/Home/GetDistinctPlannerNames',
+        contentType: 'application/json',
+        dataType: 'json',
+        success: function (data) {
+           
+            PlannerArray = data.map(planner => planner.plannerName);
+            BindPlannerName(PlannerArray);
+            console.log(PlannerArray);
+            // Set default planner when the page loads 
+            if (PlannerArray.length > 0) {
+                var defaultPlanner = PlannerArray[0];
+                $("#FilterForApproval").val(defaultPlanner);
+                FilterApprover(); 
+            }
+
+            console.log(PlannerArray);
+        },
+        error: function (errorThrown, textStatus, xhr) {
+            console.log('Error in Operation');
+        }
+    });
+}
+         */
+
+/*
+function BindPlannerName(PlannerArray) {
+    let select = document.getElementById("FilterForApproval");
+
+    // Clear existing options
+    select.innerHTML = "<option>Dropdown Items</option>";
+
+    for (let i = 0; i < PlannerArray.length; i++) {
+        let plannerName = PlannerArray[i];
+        let el = document.createElement("option");
+
+        // Set both text content and value
+        el.textContent = plannerName;
+        el.value = plannerName;
+
+        select.appendChild(el);
     }
 }
+             */
+
+
+
+function FilterApprover() {
+    var inputPlanner = $("#FilterForApproval").val();
+    var filteredPlanner = ApproverArray.filter(item => item.plannerName === inputPlanner);
+
+    // if (filteredPlanner.length == 0) {
+    //   approverdataTable.clear();
+    //   approverdataTable.draw();
+    //   alert("No data found");
+    // } else {  
+    approverdataTable.clear();
+    filteredPlanner.forEach(function (data) {
+        approverdataTable.row.add(data);
+    });
+    approverdataTable.draw();
+    // }
+}
+
+
 
 function BindPlannerNameInDropdown() {
     $.ajax({
@@ -151,7 +247,7 @@ function BindPlannerNameInDropdown() {
             if (PlannerArray.length > 0) {
                 var defaultPlanner = PlannerArray[0];
                 $("#FilterForApproval").val(defaultPlanner);
-                FilterApprover(); 
+                FilterApprover();
             }
 
             console.log(PlannerArray);
@@ -161,6 +257,8 @@ function BindPlannerNameInDropdown() {
         }
     });
 }
+
+
 
 function BindPlannerName(PlannerArray) {
     let select = document.getElementById("FilterForApproval");
@@ -179,8 +277,3 @@ function BindPlannerName(PlannerArray) {
         select.appendChild(el);
     }
 }
-
-
-
-
-

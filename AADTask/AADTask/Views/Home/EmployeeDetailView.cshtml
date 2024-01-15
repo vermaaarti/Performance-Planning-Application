@@ -44,6 +44,10 @@
 @Html.DropDownListFor(Model => Model.approver, new SelectList(Enum.GetValues(typeof(Approvr))),
     "Select approver", new { @class = "form-control ", @id = "approver"})
 
+@Html.LabelFor(Model => Model.approverTwo)
+@Html.DropDownListFor(Model => Model.approverTwo, new SelectList(Enum.GetValues(typeof(ApprovrTwo))),
+    "Select approver", new { @class = "form-control ", @id = "approverTwo"})
+
 
    @Html.HiddenFor(Model => Model.StatusOfPlanning, new { @id = "StatusOfPlanning" })
 

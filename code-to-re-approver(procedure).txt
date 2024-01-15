@@ -1,0 +1,1105 @@
+
+drop table ApprovalTask_aarti
+
+drop table EmployeeMaster_arti
+
+
+CREATE TABLE EmployeeMaster_arti (
+    EmployeeId INT IDENTITY(1,1) PRIMARY KEY,
+    EmployeeEmail NVARCHAR(255),
+    EmployeeName NVARCHAR(255),
+    ManagerId INT,
+    PlannerId INT,
+	ApproverId INT,
+	ApproverTwoId INT,
+    Department NVARCHAR(255),
+    IsAdmin INT,
+    PerformanceRatingId INT,
+    PerformanceRating NVARCHAR(255),
+    StatusOfPlanning NVARCHAR(255),
+	performanceChallenges NVARCHAR(255),
+    FOREIGN KEY (ManagerId) REFERENCES EmployeeMaster_arti(EmployeeId),
+    FOREIGN KEY (PlannerId) REFERENCES EmployeeMaster_arti(EmployeeId),
+	FOREIGN KEY (ApproverId) REFERENCES EmployeeMaster_arti(EmployeeId),
+	FOREIGN KEY (ApproverTwoId) REFERENCES EmployeeMaster_arti(EmployeeId),
+    FOREIGN KEY (PerformanceRatingId) REFERENCES PerformanceRatingMaster_arti(PerformanceRatingId),
+    CONSTRAINT ck_testbool_isadmin CHECK (IsAdmin IN (1, 0, 2)),
+    CONSTRAINT ck_testbool_depart CHECK (Department IN ('CS', 'IT')),
+    CONSTRAINT ck_testbool_perfr CHECK (PerformanceRating IN ('Poor', 'Satisfactory', 'Good', 'Excellent')),
+	CONSTRAINT ck_testbool_perch CHECK (performanceChallenges IN ('Training Required', 'Was/Is in PIP', 'No certification', 'No challenges'))
+);
+
+
+/*
+
+insert into EmployeeMaster_arti(EmployeeEmail, EmployeeName, ManagerId, PlannerId, ApproverId, ApproverTwoId, Department, IsAdmin, PerformanceRatingId, PerformanceRating, StatusOfPlanning, performanceChallenges)  
+values
+('aarti_verma@amicusglobal.com', 'Aarti', 2, 5, 5, 10, 'CS', 1, 1,'Poor', 'draft', 'Training Required'),
+('ruchir_verma@amicusglobal.com', 'Ruchir', 4, 8, 8, 10, 'CS', 0, 2, 'Satisfactory', 'draft','Was/Is in PIP'),
+('himanshi_malagar@amicusglobal.com', 'Himanshi', 4, 8, null, 10, 'IT', 2, 2, 'Poor', 'draft','Training Required'),
+('ravi_kukreja@amicusglobal.com', 'Ravi', 4, 5, 5, null, 'CS', 2,  4, 'Excellent', 'draft', 'Was/Is in PIP'),
+('chandan_soni@amicusglobal.com', 'Chandan',2, 8, 2, null, 'IT', 2, 4,'Good', 'draft', 'Training Required') ,      
+('avartika_verma@amicusglobal.com', 'Avartika', 1, 5 , 5, 10, 'IT', 2, 2, 'Poor', 'draft', 'Was/Is in PIP'),
+('rachana_k@amicusglobal.com', 'Rachana', 9, 5 , null,10, 'CS', 0, 2, 'Good', 'draft', 'Training Required'),
+('vivek_purbey@amicusglobal.com', 'Vivek', 9, 4 , 5 ,null, 'IT', 2, 3, 'Good', 'draft', 'Was/Is in PIP'),
+('yash_bakshi@amicusglobal.com', 'Yash', 5, 5, null, 10, 'CS', 2, 2, 'Good', 'draft', 'Training Required'),
+('himanshu_kamal@amicusglobal.com', 'Himanshu', 5, 5, 5, null, 'CS', 2, 2, 'Good', 'draft', 'Training Required')
+  
+  */
+
+ 
+  insert into EmployeeMaster_arti(EmployeeEmail, EmployeeName, ManagerId, PlannerId, ApproverId, ApproverTwoId, Department, IsAdmin, PerformanceRatingId, PerformanceRating, StatusOfPlanning, performanceChallenges)  
+values
+('aarti_verma@amicusglobal.com', 'Aarti', 2, 5, 5, 10, 'CS', 1, 1,'Poor', 'draft', 'Training Required'),
+('ruchir_verma@amicusglobal.com', 'Ruchir', 4, 9, 5, 5, 'CS', 0, 2, 'Satisfactory', 'draft','Was/Is in PIP'),
+('himanshi_malagar@amicusglobal.com', 'Himanshi', 4, 9, null, 10, 'IT', 2, 2, 'Poor', 'draft','Training Required'),
+('ravi_kukreja@amicusglobal.com', 'Ravi', 4, 5, 5, null, 'CS', 2,  4, 'Excellent', 'draft', 'Was/Is in PIP'),
+('chandan_soni@amicusglobal.com', 'Chandan',2, 9, 2, null, 'IT', 2, 4,'Good', 'draft', 'Training Required') ,      
+('avartika_verma@amicusglobal.com', 'Avartika', 1, 5 , 5, 10, 'IT', 2, 2, 'Poor', 'draft', 'Was/Is in PIP'),
+('rachana_k@amicusglobal.com', 'Rachana', 9, 5 , null,10, 'CS', 0, 2, 'Good', 'draft', 'Training Required'),
+('vivek_purbey@amicusglobal.com', 'Vivek', 9, 4 , 5 ,null, 'IT', 2, 3, 'Good', 'draft', 'Was/Is in PIP'),
+('yash_bakshi@amicusglobal.com', 'Yash', 5, 5, null, 10, 'CS', 2, 2, 'Good', 'draft', 'Training Required'),
+('himanshu_kamal@amicusglobal.com', 'Himanshu', 5, 5, 5, null, 'CS', 2, 2, 'Good', 'draft', 'Training Required')
+
+
+
+
+  CREATE TABLE ApprovalTask_aarti (
+    ApprovalTaskId INT IDENTITY(1,1) PRIMARY KEY,
+	EmployeeId INT REFERENCES EmployeeMaster_arti(EmployeeId),
+	PlannerId INT NOT NULL,
+	ApproverId INT,
+    ApprovalStatus NVARCHAR(255),
+    CreatedOn datetime DEFAULT GETUTCDATE(),
+
+  );
+
+  
+
+--select * from EmployeeMaster_arti where employeeId in (1,6,7,9,3)
+
+select * from EmployeeMaster_arti
+
+select * from ApprovalTask_aarti 
+
+
+           
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+----------------------------------------------code to AAD authentication---------------------------------------------------------------
+create table employee_aarti(
+employeeid int primary key not null, 
+employeemail nvarchar(255) UNIQUE,
+employeename nvarchar(255),
+)
+
+
+create table role_aarti(
+roleid int primary key not null,
+rolename nvarchar(40)
+)
+
+create table employeeRole_aarti(
+employeeroleid int primary key not null,
+employeeid int,
+roleid int,
+FOREIGN KEY (employeeid) REFERENCES employee_aarti(employeeid),
+FOREIGN KEY (roleid) REFERENCES role_aarti(roleid)
+)
+
+
+insert into employee_aarti(employeeid, employeemail, employeename)
+values
+
+(1, 'aarti_verma@amicusglobal.com', 'Aarti'),
+(2, 'chandan_soni@amicusglobal.com', 'Chandan'),
+(3, 'himanshu_kamal@amicusglobal.com', 'Himanshu'),
+(4, 'yash_bakshi@amicusglobal.com', 'Yash'),
+(5, 'ruchir_verma@amicusglobal.com', 'Ruchir'),
+(6, 'ravi_kukreja@amicusglobal.com', 'Ravi')
+
+
+
+
+
+
+insert into role_aarti(roleid,rolename)
+values
+(1, 'admin'),
+(2, 'planner'),
+(3, 'approver')
+
+
+
+  insert into employeeRole_aarti(employeeroleid, employeeid, roleid)
+values
+(1, 1, 1),
+(2, 2, 3),
+(3, 3, 3),
+(4, 4, 2),
+(5, 5, 3),
+(6, 6, 2),
+(7, 2, 2),
+(8, 4, 3),
+(9, 3, 2)
+
+
+
+    select * from employee_aarti
+
+    select * from role_aarti
+
+    select * from employeeRole_aarti
+
+
+  --  drop table employee_aarti
+   --  drop table role_aarti
+ --  drop table employeeRole_aarti
+
+
+
+ --------------------------------------procedure to AAD fetching role claim--------------------------------------------------------
+
+-- creating stored procedure
+
+CREATE PROCEDURE EmployeeRolesInfos
+
+ @Email NVARCHAR(255)
+ 
+ AS
+  BEGIN
+   
+ SELECT  E.employeemail, E.employeename, R.rolename
+    FROM employee_aarti AS E
+    INNER JOIN employeeRole_aarti AS ER ON E.employeeid = ER.employeeid
+    INNER JOIN role_aarti AS R ON ER.roleid = R.roleid
+	where E.employeemail = @Email
+
+  END;
+  
+  
+
+ --  EXEC EmployeeRolesInfos @Email = 'chandan_soni@amicusglobal.com'
+
+/*         1	Aarti          admin
+   2	   ruchir              approver
+		  ravi                 planner & approver
+		 himanshi              approver & planner
+		 chandan                                      planner  & approver
+		  yash                                        planner  & approver
+		  himanshu                                    planner  & approver
+
+*/
+ -------------------------------------------AAD part ends here --------------------------------------------------------------------
+
+
+drop table ApprovalTask_aarti
+
+drop table EmployeeMaster_arti
+
+
+CREATE TABLE EmployeeMaster_arti (
+    EmployeeId INT IDENTITY(1,1) PRIMARY KEY,
+    EmployeeEmail NVARCHAR(255),
+    EmployeeName NVARCHAR(255),
+    ManagerId INT,
+    PlannerId INT,
+	ApproverId INT,
+    Department NVARCHAR(255),
+    IsAdmin INT,
+    PerformanceRatingId INT,
+    PerformanceRating NVARCHAR(255),
+    StatusOfPlanning NVARCHAR(255),
+	performanceChallenges NVARCHAR(255),
+    IsEligibleForPlanning INT,
+    FOREIGN KEY (ManagerId) REFERENCES EmployeeMaster_arti(EmployeeId),
+    FOREIGN KEY (PlannerId) REFERENCES EmployeeMaster_arti(EmployeeId),
+	FOREIGN KEY (ApproverId) REFERENCES EmployeeMaster_arti(EmployeeId),
+    FOREIGN KEY (PerformanceRatingId) REFERENCES PerformanceRatingMaster_arti(PerformanceRatingId),
+    CONSTRAINT ck_testbool_isadmin CHECK (IsAdmin IN (1, 0, 2)),
+    CONSTRAINT ck_testbool_isplneligible CHECK (IsEligibleForPlanning IN (1, 0)),
+    CONSTRAINT ck_testbool_depart CHECK (Department IN ('CS', 'IT')),
+    CONSTRAINT ck_testbool_perfr CHECK (PerformanceRating IN ('Poor', 'Satisfactory', 'Good', 'Excellent')),
+	CONSTRAINT ck_testbool_perch CHECK (performanceChallenges IN ('Training Required', 'Was/Is in PIP', 'No certification', 'No challenges'))
+);
+
+
+insert into EmployeeMaster_arti(EmployeeEmail, EmployeeName, ManagerId, PlannerId, ApproverId, Department, IsAdmin, PerformanceRatingId, PerformanceRating, StatusOfPlanning, performanceChallenges, IsEligibleForPlanning)  
+values
+('aarti_verma@amicusglobal.com', 'Aarti', 2, 5, 5, 'CS', 1, 1,'Poor', 'draft', 'Training Required', 0),
+('ruchir_verma@amicusglobal.com', 'Ruchir', 4, 8, 8, 'CS', 0, 2, 'Satisfactory', 'draft','Was/Is in PIP', 1),
+('sharma_srishti@amicusglobal.com', 'Srishti', 4, 8, 5, 'IT', 2, 2, 'Poor', 'draft','Training Required', 1),
+('ravi_kukreja@amicusglobal.com', 'Ravi', 4, 5, 5, 'CS', 2,  4, 'Excellent', 'draft', 'Was/Is in PIP', 1),
+('chandan_soni@amicusglobal.com', 'Chandan',2, 8, 2, 'IT', 2, 4,'Good', 'draft', 'Training Required', 1) ,      
+('avartika_verma@amicusglobal.com', 'Avartika', 1, 5 , 5, 'IT', 2, 2, 'Poor', 'draft', 'Was/Is in PIP', 1),
+('rachana_k@amicusglobal.com', 'Rachana', 9, 5 , 5, 'CS', 0, 2, 'Good', 'draft', 'Training Required', 1),
+('vivek_purbey@amicusglobal.com', 'Vivek', 9, 4 , 5 , 'IT', 2, 3, 'Good', 'draft', 'Was/Is in PIP', 1),
+('yash_bakshi@amicusglobal.com', 'Yash', 5, 5, 5, 'CS', 2, 2, 'Good', 'draft', 'Training Required', 1)
+
+
+CREATE TABLE ApprovalTask_aarti (
+    ApprovalTaskId INT IDENTITY(1,1) PRIMARY KEY,
+	EmployeeId INT REFERENCES EmployeeMaster_arti(EmployeeId),
+	PlannerId INT NOT NULL,
+	ApproverId INT NOT NULL,
+    ApprovalStatus NVARCHAR(255),
+    CreatedOn datetime DEFAULT GETUTCDATE(),
+  );
+
+
+
+
+select * from EmployeeMaster_arti
+
+
+select * from ApprovalTask_aarti 
+
+
+
+
+--//////////////////procedure to get the employees based on admin or planner//////////////////////////////////////////////////////////////////////////////////////////////
+--////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+CREATE PROCEDURE [dbo].[procedureToGetEmployeeDataC]
+    @Email NVARCHAR (255)
+AS
+BEGIN
+    DECLARE @id AS INT;
+    DECLARE @isadmin AS INT;
+    
+    SET @id = (SELECT EmployeeId FROM EmployeeMaster_arti WHERE EmployeeEmail = @Email);
+    SET @isadmin = (SELECT TOP 1 IsAdmin FROM EmployeeMaster_arti WHERE EmployeeId = @id);
+ 
+    IF @isadmin = 1
+        SELECT
+            EmployeeId,
+            EmployeeName,
+            EmployeeEmail,
+            ISNULL((SELECT TOP 1 emp2.EmployeeName FROM EmployeeMaster_arti AS emp2 WHERE emp1.ManagerId = emp2.EmployeeId), '') AS ManagerName,
+            ISNULL((SELECT TOP 1 emp3.EmployeeName FROM EmployeeMaster_arti AS emp3 WHERE emp1.PlannerId = emp3.EmployeeId), '') AS PlannerName,
+            Department,
+            PerformanceRating,
+            performanceChallenges,
+            StatusOfPlanning,
+            PlannerId,
+            ISNULL(ApproverId, 0) AS ApproverId,
+            ISNULL(ApproverTwoId, 0) AS ApproverTwoId,
+            CreatedOn = GETUTCDATE(),
+            EmployeeId,
+            ApprovalStatus = 'Assigned'
+        FROM EmployeeMaster_arti AS emp1;
+    ELSE IF @isadmin = 0 -- approver
+        SELECT
+            EmployeeId,
+            EmployeeName,
+            EmployeeEmail,
+            ISNULL((SELECT TOP 1 emp4.EmployeeName FROM EmployeeMaster_arti AS emp4 WHERE emp5.ManagerId = emp4.EmployeeId), '') AS ManagerName,
+            ISNULL((SELECT TOP 1 emp7.EmployeeName FROM EmployeeMaster_arti AS emp7 WHERE emp5.PlannerId = emp7.EmployeeId), '') AS PlannerName,
+            Department,
+            PerformanceRating,
+            performanceChallenges,
+            StatusOfPlanning,
+            PlannerId,
+            ISNULL(ApproverId, 0) AS ApproverId,
+            ISNULL(ApproverTwoId, 0) AS ApproverTwoId,
+            CreatedOn = GETUTCDATE(),
+            EmployeeId,
+            ApprovalStatus = 'Assigned'
+        FROM EmployeeMaster_arti AS emp5
+        WHERE ApproverId = @id;
+    ELSE IF @isadmin = 2 -- planner
+        SELECT
+            EmployeeId,
+            EmployeeName,
+            EmployeeEmail,
+            ISNULL((SELECT TOP 1 emp4.EmployeeName FROM EmployeeMaster_arti AS emp4 WHERE emp5.ManagerId = emp4.EmployeeId), '') AS ManagerName,
+            ISNULL((SELECT TOP 1 emp7.EmployeeName FROM EmployeeMaster_arti AS emp7 WHERE emp5.PlannerId = emp7.EmployeeId), '') AS PlannerName,
+            Department,
+            PerformanceRating,
+            performanceChallenges,
+            StatusOfPlanning,
+            PlannerId,
+            ISNULL(ApproverId, 0) AS ApproverId,
+            ISNULL(ApproverTwoId, 0) AS ApproverTwoId,
+            CreatedOn = GETUTCDATE(),
+            EmployeeId,
+            ApprovalStatus = 'Assigned'
+        FROM EmployeeMaster_arti AS emp5
+        WHERE PlannerId = @id;
+END
+
+
+
+
+
+--////////////////procedure to send the updated array to the database after changing the performance rating  /////////////////////////////////////////////////////////////
+--///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+CREATE PROCEDURE [dbo].[SaveEmployeeDatasAsDraft_artiA]
+@JsonEmployee NVARCHAR (MAX)
+AS
+BEGIN
+    CREATE TABLE #TempTable_aarti (
+        EmployeeId  INT PRIMARY KEY,
+        PerformanceRating NVARCHAR (255) ,
+		performanceChallenges NVARCHAR (255)
+
+    );
+    INSERT INTO #TempTable_aarti (EmployeeId, PerformanceRating, performanceChallenges)
+    SELECT EmployeeId,
+           PerformanceRating,
+		   performanceChallenges
+    FROM   OPENJSON (@JsonEmployee) WITH (EmployeeId INT '$.EmployeeId', PerformanceRating NVARCHAR (255) '$.PerformanceRating', performanceChallenges NVARCHAR(255) '$.performanceChallenges');
+    UPDATE ema
+    SET    ema.PerformanceRating = tt.PerformanceRating ,
+	   ema.performanceChallenges = tt.performanceChallenges
+    FROM   EmployeeMaster_arti AS ema
+           INNER JOIN
+           #TempTable_aarti AS tt
+           ON ema.EmployeeId = tt.EmployeeId;
+    DROP TABLE #TempTable_aarti;
+END
+
+
+
+
+--//////////////////////////////////procedure to insert or update employee  ////////////////////////////////////////////////////////////////////////////////////////
+--/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+CREATE PROCEDURE [dbo].[InsertOrUpdateEmployeeFromTableB]
+    @EmpJson NVARCHAR(MAX)
+AS
+BEGIN
+    DECLARE @EmployeeId AS INT;
+    DECLARE @EmployeeName AS NVARCHAR(MAX);
+    DECLARE @EmployeeEmail AS NVARCHAR(MAX);
+    DECLARE @ManagerName AS NVARCHAR(MAX);
+    DECLARE @Department AS NVARCHAR(MAX);
+    DECLARE @PlannerName AS NVARCHAR(MAX);
+    DECLARE @ApproverName AS NVARCHAR(MAX);
+    DECLARE @ApproverTwoName AS NVARCHAR(MAX);
+ 
+    -- Extract values from JSON
+    SELECT
+        @EmployeeId = EmployeeId,
+        @EmployeeName = EmployeeName,
+        @EmployeeEmail = EmployeeEmail,
+        @ManagerName = ManagerName,
+        @Department = Department,
+        @PlannerName = PlannerName,
+        @ApproverName = ApproverName,
+        @ApproverTwoName = ApproverTwoName
+    FROM OPENJSON(@EmpJson) WITH (
+        EmployeeId INT '$.EmployeeId',
+        EmployeeName NVARCHAR(MAX) '$.EmployeeName',
+        EmployeeEmail NVARCHAR(MAX) '$.EmployeeEmail',
+        ManagerName NVARCHAR(MAX) '$.ManagerName',
+        Department NVARCHAR(MAX) '$.Department',
+        PlannerName NVARCHAR(MAX) '$.PlannerName',
+        ApproverName NVARCHAR(MAX) '$.ApproverName',
+        ApproverTwoName NVARCHAR(MAX) '$.ApproverTwoName'
+    );
+ 
+    -- Check if EmployeeId is 0 (add new record) or non-zero (update existing record)
+    IF @EmployeeId = 0
+    BEGIN
+        -- Insert new record
+        INSERT INTO EmployeeMaster_arti (
+            EmployeeName,
+            EmployeeEmail,
+            ManagerId,
+            PlannerId,
+            ApproverId,
+            ApproverTwoId,
+            Department,
+            StatusOfPlanning
+        )
+        VALUES (
+            @EmployeeName,
+            @EmployeeEmail,
+            (SELECT EmployeeId FROM EmployeeMaster_arti WHERE EmployeeName = @ManagerName),
+            (SELECT EmployeeId FROM EmployeeMaster_arti WHERE EmployeeName = @PlannerName),
+            (SELECT EmployeeId FROM EmployeeMaster_arti WHERE EmployeeName = @ApproverName),
+            (SELECT EmployeeId FROM EmployeeMaster_arti WHERE EmployeeName = @ApproverTwoName),
+            @Department,
+            'draft'
+        );
+    END
+    ELSE
+    BEGIN
+        -- Update existing record
+        UPDATE E SET
+            E.EmployeeName = @EmployeeName,
+            E.EmployeeEmail = @EmployeeEmail,
+            E.ManagerId = (SELECT EmployeeId FROM EmployeeMaster_arti WHERE EmployeeName = @ManagerName),
+            E.PlannerId = (SELECT EmployeeId FROM EmployeeMaster_arti WHERE EmployeeName = @PlannerName),
+            E.ApproverId = (SELECT EmployeeId FROM EmployeeMaster_arti WHERE EmployeeName = @ApproverName),
+            E.ApproverTwoId = (SELECT EmployeeId FROM EmployeeMaster_arti WHERE EmployeeName = @ApproverTwoName),
+            E.Department = @Department
+        FROM EmployeeMaster_arti AS E
+        WHERE E.EmployeeId = @EmployeeId;
+    END
+END
+
+
+
+--////////////////////////////////////////////////// execute //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+DECLARE @json NVARCHAR(MAX) = '{"EmployeeId": 0, "EmployeeName": "Jonathan Doe", "EmployeeEmail": "john@example.com", "ManagerName": "Manager1", "Department": "IT", "PlannerName": "Planner1"}';
+ 
+EXEC [dbo].[InsertOrUpdateEmployee] @EmpJson = @json;
+
+
+select * from EmployeeMaster_arti
+
+
+
+
+
+
+--///////////////////////////////////////procedure to get the employees based on approver  /////////////////////////////////////////////////////////////////////////////////
+--/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+ CREATE PROCEDURE [dbo].[ShowEmployeeRecordToApproverE] 
+    @EmployeeEmail NVARCHAR(MAX)
+AS
+BEGIN
+    DECLARE @EmployeeId INT;
+ 
+    -- Get EmployeeId from EmployeeMaster table using the provided email
+    SET @EmployeeId = (SELECT EmployeeId FROM EmployeeMaster_arti WHERE EmployeeEmail = @EmployeeEmail);
+ 
+    -- Select records from ApprovalTask_aarti based on EmployeeId and ApprovalStatus
+    SELECT
+        at.ApprovalTaskId,
+        (SELECT EmployeeName FROM EmployeeMaster_arti WHERE EmployeeId = at.EmployeeId) AS EmployeeName,
+        (SELECT EmployeeName FROM EmployeeMaster_arti WHERE EmployeeId = at.PlannerId) AS PlannerName,
+        (SELECT EmployeeName FROM EmployeeMaster_arti WHERE EmployeeId = at.ApproverId) AS ApproverName,
+        at.ApprovalStatus,
+        at.CreatedOn
+    FROM
+        ApprovalTask_aarti AS at
+    INNER JOIN
+        EmployeeMaster_arti AS emp1 ON at.ApproverId = emp1.EmployeeId
+    WHERE
+        at.ApproverId = @EmployeeId
+        AND at.ApprovalStatus = 'Assigned'
+        AND (
+            NOT EXISTS (
+                -- Checking if there is a repeated record with a lesser ApproverId and ApprovalStatus 'Assigned'
+				--(for approver-2)
+                SELECT 1
+                FROM ApprovalTask_aarti AS at2
+                WHERE
+                    at2.EmployeeId = at.EmployeeId
+                    AND at2.ApproverId < at.ApproverId
+                    AND at2.ApprovalStatus = 'Assigned'
+            )
+            OR
+            EXISTS (
+                -- Checking if the corresponding repeated record has an ApprovalStatus of 'Approved'
+				--(for approver-1)
+                SELECT 1
+                FROM ApprovalTask_aarti AS at3
+                WHERE
+                    at3.EmployeeId = at.EmployeeId
+                    AND at3.ApproverId < at.ApproverId
+                    AND at3.ApprovalStatus = 'Approved'
+            )
+        );
+END
+
+
+--/////////////////////////// execute  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+EXEC [dbo].[ShowEmployeForApproverE] @EmployeeEmail = 'chandan_soni@amicusglobal.com';
+
+EXEC [dbo].[ShowEmployeForApproverE] @EmployeeEmail = 'himanshu_kamal@amicusglobal.com';
+
+select * from EmployeeMaster_arti
+
+select * from ApprovalTask_aarti 
+
+
+
+
+
+ 
+--///////////////////////////////////procedure to mark approvalStatus as approved and performance rating as ///////
+--/////////////////////////////////////completed  ////////////////////////////////////////////////////////////////
+
+
+CREATE PROCEDURE [dbo].[ChangeStatusFromAssignToApprovedH] 
+    @JsonEmployee NVARCHAR(MAX),
+    @ApproverEmail NVARCHAR(MAX)
+AS
+BEGIN
+    -- Temporary table to store approval data
+    CREATE TABLE #TempTable_arti (
+        ApprovalTaskId INT PRIMARY KEY,
+        ApprovalStatus NVARCHAR(255)
+    );
+ 
+    -- Insert approval data into the temporary table
+    INSERT INTO #TempTable_arti (ApprovalTaskId, ApprovalStatus)
+    SELECT ApprovalTaskId, 'Approved'
+    FROM OPENJSON(@JsonEmployee) WITH (ApprovalTaskId INT '$.ApprovalTaskId');
+ 
+    -- Update ApprovalStatus in ApprovalTask_aarti table
+    UPDATE aprl
+    SET aprl.ApprovalStatus = tta.ApprovalStatus
+    FROM ApprovalTask_aarti AS aprl
+    INNER JOIN #TempTable_arti AS tta ON aprl.ApprovalTaskId = tta.ApprovalTaskId;
+ 
+    -- Drop the temporary table
+    DROP TABLE #TempTable_arti;
+ 
+    -- Get the ApproverId based on the provided email
+    DECLARE @ApproverId AS INT;
+    SELECT @ApproverId = EmployeeId
+    FROM EmployeeMaster_arti
+    WHERE EmployeeEmail = @ApproverEmail;
+ 
+    IF @ApproverId IS NOT NULL
+    BEGIN
+        -- Update StatusOfPlanning in EmployeeMaster_arti table
+        UPDATE em
+        SET em.StatusOfPlanning = 'Completed'
+        FROM EmployeeMaster_arti AS em
+        INNER JOIN ApprovalTask_aarti AS appr ON em.EmployeeId = appr.EmployeeId
+        WHERE appr.ApprovalStatus = 'Approved'
+          AND (em.ApproverId = @ApproverId OR em.ApproverTwoId = @ApproverId);
+    END
+END
+
+
+
+
+
+
+
+
+
+
+ --//////////////////////////////////// procedure to check repeated record and mark /////////////////////////
+ --////////////////////////////////////////    inprogress for the second approver /////////////////////////////
+
+ CREATE PROCEDURE [dbo].[CheckAndUpdateStatusE] 
+AS
+BEGIN
+    IF EXISTS (
+        SELECT EmployeeId
+        FROM ApprovalTask_aarti
+        GROUP BY EmployeeId
+        HAVING COUNT(EmployeeId) > 1
+    )
+    BEGIN
+        -- Duplicate records found for at least one employee
+        UPDATE em
+        SET StatusOfPlanning =
+            CASE
+                WHEN EXISTS (
+                    SELECT 1
+                    FROM ApprovalTask_aarti AS appr1
+                    WHERE appr1.EmployeeId = em.EmployeeId
+                    AND EXISTS (
+                        SELECT 1
+                        FROM ApprovalTask_aarti AS appr2
+                        WHERE appr2.EmployeeId = appr1.EmployeeId
+                        AND appr2.ApprovalTaskId <> appr1.ApprovalTaskId
+                        AND appr2.ApprovalStatus = 'Approved'
+                        AND appr1.ApprovalStatus = 'Assigned'
+                    )
+                ) THEN 'InProgress'
+                WHEN EXISTS (
+                    SELECT 1
+                    FROM ApprovalTask_aarti AS appr1
+                    WHERE appr1.EmployeeId = em.EmployeeId
+                    AND EXISTS (
+                        SELECT 1
+                        FROM ApprovalTask_aarti AS appr2
+                        WHERE appr2.EmployeeId = appr1.EmployeeId
+                        AND appr2.ApprovalTaskId <> appr1.ApprovalTaskId
+                        AND appr2.ApprovalStatus = 'Unassigned'
+                        AND appr1.ApprovalStatus = 'Approved'
+                    )
+                ) THEN 'draft'
+                ELSE em.StatusOfPlanning
+            END
+        FROM EmployeeMaster_arti AS em
+        WHERE em.EmployeeId IN (
+            SELECT EmployeeId
+            FROM ApprovalTask_aarti
+            GROUP BY EmployeeId
+            HAVING COUNT(EmployeeId) > 1
+        );
+    END
+END
+
+
+
+
+--///////////////////////////////////// procedure to change approvalStatus from assigned to unassigned //////////////////////////////////////////////////////////////////////////
+--/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+CREATE PROCEDURE [dbo].[ChangeStatusToUnassignedfromAssignedI]
+  @ApproverEmail NVARCHAR(MAX)
+AS
+BEGIN
+    -- Take employeeid from the provided email
+    DECLARE @ApproverId INT;
+    SELECT @ApproverId = EmployeeId FROM EmployeeMaster_arti WHERE EmployeeEmail = @ApproverEmail;
+ 
+    -- Update ApprovalStatus to 'Unassigned' where it is currently 'Assigned' for the logged-in approver
+    UPDATE at
+    SET ApprovalStatus = 'Unassigned'
+    FROM ApprovalTask_aarti at
+    INNER JOIN EmployeeMaster_arti em ON at.EmployeeId = em.EmployeeId
+    WHERE at.ApprovalStatus = 'Assigned' AND at.ApproverId = @ApproverId;
+ 
+    -- Update StatusOfPlanning to 'draft' where it is currently 'InProgress' for the corresponding employee
+    UPDATE em
+    SET StatusOfPlanning = 'draft'
+    FROM EmployeeMaster_arti em
+    INNER JOIN ApprovalTask_aarti at ON em.EmployeeId = at.EmployeeId
+    WHERE em.StatusOfPlanning = 'InProgress' AND (em.ApproverId = @ApproverId or em.ApproverTwoId = @ApproverId) ;
+END
+
+
+
+
+
+--//////////////////////////// procedure to get different planner names for data binding /////////////////////////////////////////
+--//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+CREATE PROCEDURE [dbo].[GetDistinctPlannerNames]
+AS
+BEGIN
+    -- Created a temporary table to store distinct PlannerId values
+    CREATE TABLE #DistinctPlannerIds (PlannerId INT);
+ 
+    -- Insert distinct PlannerId values from ApprovalTask_aarti table
+    INSERT INTO #DistinctPlannerIds(PlannerId)
+    SELECT DISTINCT PlannerId
+    FROM ApprovalTask_aarti;
+ 
+    -- Fetch PlannerId and corresponding PlannerName from EmployeeMaster_arti
+    SELECT DISTINCT
+        d.PlannerId,
+        e.EmployeeName AS PlannerName
+    FROM #DistinctPlannerIds d
+    INNER JOIN EmployeeMaster_arti e ON d.PlannerId = e.EmployeeId;
+ 
+    -- Drop the temporary table
+    DROP TABLE #DistinctPlannerIds;
+END
+
+
+--/////////////////////////  execute //////////////////////////////////////////////////////////
+
+exec  [dbo].[GetDistinctPlannerNames];
+
+
+
+
+--////////////////////////////////////procedure to add data into the approverTask datatable ///////////////////////////////////////////////////////////////////////////////
+--///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ 
+CREATE PROCEDURE [dbo].[AddDataIntoApprovalTaskTableJ]
+@EmpJson NVARCHAR (MAX), @ApproverEmail NVARCHAR (MAX)
+AS
+BEGIN
+    DECLARE @ApproverId AS INT;
+    SELECT @ApproverId = EmployeeId FROM EmployeeMaster_arti
+    WHERE  EmployeeEmail = @ApproverEmail;
+
+    CREATE TABLE #TempData (
+        EmployeeId INT,
+        PlannerId  INT,
+        ApproverId INT
+    );
+    INSERT INTO #TempData (EmployeeId, PlannerId, ApproverId)
+    SELECT EmployeeId,
+           PlannerId,
+           ApproverId
+    FROM   OPENJSON (@EmpJson) WITH (EmployeeId INT '$.EmployeeId', PlannerId INT '$.PlannerId', ApproverId INT '$.ApproverId');
+    SELECT   t.EmployeeId,
+             COUNT(at.ApprovalTaskId) AS ExistingRecords
+    INTO     #EmployeeRecordsCount
+    FROM     #TempData AS t
+             LEFT OUTER JOIN
+             ApprovalTask_aarti AS at
+             ON t.EmployeeId = at.EmployeeId
+                AND at.ApprovalStatus = 'Unassigned'
+    GROUP BY t.EmployeeId;
+
+    UPDATE at
+    SET    at.ApprovalStatus = 'Assigned'
+    FROM   ApprovalTask_aarti AS at
+           INNER JOIN
+           #EmployeeRecordsCount AS ec
+           ON at.EmployeeId = ec.EmployeeId
+    WHERE  at.ApprovalStatus = 'Unassigned';
+
+    INSERT INTO ApprovalTask_aarti (EmployeeId, PlannerId, ApproverId, ApprovalStatus, CreatedOn)
+    SELECT t.EmployeeId,
+           t.PlannerId,
+           e.ApproverId,
+           'Assigned',
+           GETUTCDATE()
+    FROM   #TempData AS t
+           INNER JOIN
+           EmployeeMaster_arti AS e
+           ON t.EmployeeId = e.EmployeeId
+    WHERE  e.ApproverId IS NOT NULL
+           AND NOT EXISTS (SELECT 1
+                           FROM   ApprovalTask_aarti AS at
+                           WHERE  at.EmployeeId = t.EmployeeId
+                                  AND at.ApprovalStatus = 'Assigned')
+    UNION ALL
+    SELECT t.EmployeeId,
+           t.PlannerId,
+           e.ApproverTwoId,
+           'Assigned',
+           GETUTCDATE()
+    FROM   #TempData AS t
+           INNER JOIN
+           EmployeeMaster_arti AS e
+           ON t.EmployeeId = e.EmployeeId
+    WHERE  e.ApproverTwoId IS NOT NULL
+           AND NOT EXISTS (SELECT 1
+                           FROM   ApprovalTask_aarti AS at
+                           WHERE  at.EmployeeId = t.EmployeeId
+                                  AND at.ApprovalStatus = 'Assigned');
+    DROP TABLE #TempData;
+    DROP TABLE #EmployeeRecordsCount;
+END
+
+
+
+
+
+--///////////////////  procudure to add(add data into approvalTask table) or update(unassigned to assigned) 
+--//////////////////// status into the approvaltask table  ////////////////////////////////////////////////////
+
+
+--ChangeStatusToInProgressI   &&   AddOrUpdateDataIntoApprovalTaskTableN
+
+
+CREATE PROCEDURE [dbo].[AddOrUpdateDataIntoApprovalTaskTableN]
+@EmpJson NVARCHAR (MAX), @PlannerEmail NVARCHAR (MAX)
+AS
+BEGIN
+    DECLARE @PlannerId AS INT;
+    SELECT @PlannerId = EmployeeId
+    FROM   EmployeeMaster_arti
+    WHERE  EmployeeEmail = @PlannerEmail;
+    CREATE TABLE #TempData (
+        EmployeeId    INT,
+        PlannerId     INT,
+        ApproverId    INT,
+        ApproverTwoId INT
+    );
+    INSERT INTO #TempData (EmployeeId, PlannerId, ApproverId, ApproverTwoId)
+    SELECT EmployeeId,
+           PlannerId,
+           ApproverId,
+           ApproverTwoId
+    FROM   OPENJSON (@EmpJson) WITH (EmployeeId INT '$.EmployeeId', PlannerId INT '$.PlannerId', ApproverId INT '$.ApproverId', ApproverTwoId INT '$.ApproverTwoId');
+    
+	CREATE TABLE #EmployeeRecordsCount (
+        EmployeeId INT PRIMARY KEY,
+        ExistingRecords  INT,
+        StatusOfPlanning NVARCHAR (255)
+    );
+    INSERT INTO #EmployeeRecordsCount (EmployeeId, ExistingRecords, StatusOfPlanning)
+    SELECT   t.EmployeeId,
+             COUNT(at.ApprovalTaskId) AS ExistingRecords,
+             em.StatusOfPlanning
+    FROM     #TempData AS t
+             LEFT OUTER JOIN
+             ApprovalTask_aarti AS at
+             ON t.EmployeeId = at.EmployeeId
+                AND at.ApprovalStatus = 'Unassigned'
+             LEFT OUTER JOIN
+             EmployeeMaster_arti AS em
+             ON t.EmployeeId = em.EmployeeId
+    WHERE    em.PlannerId = @PlannerId
+    GROUP BY t.EmployeeId, em.StatusOfPlanning;
+
+    UPDATE at
+    SET    at.ApprovalStatus = 'Assigned'
+    FROM   ApprovalTask_aarti AS at
+           INNER JOIN
+           #EmployeeRecordsCount AS ec
+           ON at.EmployeeId = ec.EmployeeId
+    WHERE  at.ApprovalStatus = 'Unassigned';
+
+    INSERT INTO ApprovalTask_aarti (EmployeeId, PlannerId, ApproverId, ApprovalStatus, CreatedOn)
+    SELECT t.EmployeeId,
+           t.PlannerId,
+           e.ApproverId,
+           'Assigned',
+           GETUTCDATE()
+    FROM   #TempData AS t
+           INNER JOIN
+           EmployeeMaster_arti AS e
+           ON t.EmployeeId = e.EmployeeId
+           LEFT OUTER JOIN
+           #EmployeeRecordsCount AS er
+           ON t.EmployeeId = er.EmployeeId
+    WHERE  e.ApproverId IS NOT NULL
+           AND NOT EXISTS (SELECT 1
+                           FROM   ApprovalTask_aarti AS at
+                           WHERE  at.EmployeeId = t.EmployeeId)
+           AND e.PlannerId = @PlannerId;
+
+    INSERT INTO ApprovalTask_aarti (EmployeeId, PlannerId, ApproverId, ApprovalStatus, CreatedOn)
+    SELECT t.EmployeeId,
+           t.PlannerId,
+           e.ApproverTwoId,
+           'Assigned',
+           GETUTCDATE()
+    FROM   #TempData AS t
+           INNER JOIN
+           EmployeeMaster_arti AS e
+           ON t.EmployeeId = e.EmployeeId
+    WHERE  e.ApproverTwoId IS NOT NULL
+           AND NOT EXISTS (SELECT 1
+                           FROM   ApprovalTask_aarti AS at
+                           WHERE  at.EmployeeId = t.EmployeeId)
+           AND e.PlannerId = @PlannerId;
+    UPDATE at
+    SET    at.ApprovalStatus = 'Assigned'
+    FROM   ApprovalTask_aarti AS at
+           INNER JOIN
+           #TempData AS t
+           ON at.EmployeeId = t.EmployeeId
+           INNER JOIN
+           EmployeeMaster_arti AS e
+           ON t.EmployeeId = e.EmployeeId
+    WHERE  e.ApproverTwoId IS NOT NULL
+           AND at.ApprovalStatus = 'Unassigned'
+           AND e.PlannerId = @PlannerId;
+    DROP TABLE #TempData;
+    DROP TABLE #EmployeeRecordsCount;
+END
+
+
+
+
+DECLARE @EmpJson NVARCHAR(MAX) = '{"EmployeeId": 4, "PlannerId": 5, "ApproverId": 10, "ApproverTwoId": ""}';
+DECLARE @PlannerEmail NVARCHAR(MAX) = 'chandan_soni@amicusglobal.com';
+ 
+EXEC [dbo].[AddOrUpdateDataIntoApprovalTaskTableZD] @EmpJson, @PlannerEmail;
+
+
+
+--/////////////////////////////////// procedure to add additional records //////////////////////////////////////////////////////
+--////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+CREATE PROCEDURE [dbo].[AddAdditionalApproverRecordsB]
+AS
+BEGIN
+    -- Create a temporary table to store employee data
+    CREATE TABLE #TempData (
+        EmployeeId INT,
+        PlannerId INT,
+        ApproverId INT,
+        ApproverTwoId INT
+    );
+ 
+    -- Insert employee data from ApprovalTask table
+    INSERT INTO #TempData (EmployeeId, PlannerId, ApproverId, ApproverTwoId)
+    SELECT at.EmployeeId, at.PlannerId, em.ApproverId, em.ApproverTwoId
+    FROM ApprovalTask_aarti at
+    INNER JOIN EmployeeMaster_arti em ON at.EmployeeId = em.EmployeeId
+    WHERE em.ApproverId IS NOT NULL AND em.ApproverTwoId IS NOT NULL
+      AND at.ApprovalStatus = 'Assigned';
+ 
+    -- Insert new records for employees with both approvers
+    INSERT INTO ApprovalTask_aarti (EmployeeId, PlannerId, ApproverId, ApprovalStatus, CreatedOn)
+    SELECT EmployeeId, PlannerId, ApproverTwoId, 'Assigned', GETUTCDATE()
+    FROM #TempData;
+ 
+    -- Drop temporary table
+    DROP TABLE #TempData;
+END
+
+ --EXEC [dbo].[AddAdditionalApproverRecordsA];
+
+ 
+ CREATE PROCEDURE [dbo].[AddAdditionalApproverRecordsC]
+ AS
+BEGIN
+    -- Create a temporary table to store employee data
+    CREATE TABLE #TempData (
+        EmployeeId INT,
+        PlannerId INT,
+        ApproverId INT,
+        ApproverTwoId INT
+    );
+ 
+    -- Insert unique employee data from ApprovalTask table
+    INSERT INTO #TempData (EmployeeId, PlannerId, ApproverId, ApproverTwoId)
+    SELECT DISTINCT at.EmployeeId, at.PlannerId, em.ApproverId, em.ApproverTwoId
+    FROM ApprovalTask_aarti at
+    INNER JOIN EmployeeMaster_arti em ON at.EmployeeId = em.EmployeeId
+    WHERE em.ApproverId IS NOT NULL AND em.ApproverTwoId IS NOT NULL
+      AND at.ApprovalStatus = 'Assigned'
+      AND NOT EXISTS (
+          SELECT 1
+          FROM ApprovalTask_aarti
+          WHERE EmployeeId = at.EmployeeId AND ApproverId = em.ApproverTwoId
+          AND ApprovalStatus = 'Assigned'
+      );
+ 
+    -- Insert new records for employees with both approvers
+    INSERT INTO ApprovalTask_aarti (EmployeeId, PlannerId, ApproverId, ApprovalStatus, CreatedOn)
+    SELECT EmployeeId, PlannerId, ApproverTwoId, 'Assigned', GETUTCDATE()
+    FROM #TempData;
+ 
+    -- Drop temporary table
+    DROP TABLE #TempData;
+END
+
+
+
+
+ 
+
+--//////////////////// procudure to add employee when both the approvers are same ///////////////////////////
+--///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+ CREATE PROCEDURE [dbo].[AddRecordsForDuplicateApproversL]
+AS
+BEGIN
+    -- Create a temporary table to store employee data
+    CREATE TABLE #TempData (
+        EmployeeId INT,
+        PlannerId INT,
+        ApproverId INT,
+        ApproverTwoId INT
+    );
+ 
+    -- Insert unique employee data with approved status from ApprovalTask table
+    INSERT INTO #TempData (EmployeeId, PlannerId, ApproverId, ApproverTwoId)
+    SELECT DISTINCT
+        at.EmployeeId,
+        at.PlannerId,
+        em.ApproverId,
+        em.ApproverTwoId
+    FROM
+        ApprovalTask_aarti at
+    INNER JOIN
+        EmployeeMaster_arti em ON at.EmployeeId = em.EmployeeId
+    WHERE
+        at.ApprovalStatus = 'Approved'
+        AND em.ApproverId = em.ApproverTwoId;
+ 
+    -- Insert new records for employees with both approvers (only if count is less than 2)
+    INSERT INTO ApprovalTask_aarti (EmployeeId, PlannerId, ApproverId, ApprovalStatus, CreatedOn)
+    SELECT
+        EmployeeId,
+        PlannerId,
+        CASE
+            WHEN ApproverTwoId IS NOT NULL THEN ApproverTwoId
+            ELSE ApproverId
+        END AS ApproverId,
+        'Assigned',
+        GETUTCDATE()
+    FROM
+        #TempData td
+    WHERE
+        (SELECT COUNT(*) FROM ApprovalTask_aarti WHERE EmployeeId = td.EmployeeId) < 2;
+ 
+    -- Update StatusOfPlanning to 'InProgress' in EmployeeMaster_arti
+    UPDATE em
+    SET StatusOfPlanning = 'InProgress'
+    FROM EmployeeMaster_arti em
+    INNER JOIN #TempData td ON em.EmployeeId = td.EmployeeId;
+ 
+    -- Update StatusOfPlanning to 'Draft' for employees with 'Unassigned' status
+    UPDATE em
+    SET StatusOfPlanning = 'draft'
+    FROM EmployeeMaster_arti em
+    INNER JOIN #TempData td ON em.EmployeeId = td.EmployeeId
+    WHERE EXISTS (
+        SELECT 1
+        FROM ApprovalTask_aarti at
+        WHERE at.EmployeeId = em.EmployeeId
+            AND at.ApprovalStatus = 'Unassigned'
+    );
+ 
+    -- Update StatusOfPlanning to 'Completed' for employees with both records having 'Approved' status
+    UPDATE em
+    SET StatusOfPlanning = 'Completed'
+    FROM EmployeeMaster_arti em
+    INNER JOIN #TempData td ON em.EmployeeId = td.EmployeeId
+    WHERE (SELECT COUNT(*) FROM ApprovalTask_aarti WHERE EmployeeId = td.EmployeeId AND ApprovalStatus = 'Approved') = 2;
+ 
+    -- Drop temporary table
+    DROP TABLE #TempData;
+END
+
+
+
+
+--//////////////////////// procedure to delete the 'approved' status record for both same approver case //////
+--///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+CREATE PROCEDURE [dbo].[DeleteRecordsForDuplicateApproversD]
+AS
+BEGIN
+    -- Create a temporary table to store employee data
+    CREATE TABLE #TempData (
+        EmployeeId INT,
+        PlannerId INT,
+        ApproverId INT,
+        ApproverTwoId INT
+    );
+ 
+    -- Insert unique employee data with approved and unassigned status from ApprovalTask table
+    INSERT INTO #TempData (EmployeeId, PlannerId, ApproverId, ApproverTwoId)
+    SELECT DISTINCT at.EmployeeId, at.PlannerId, em.ApproverId, em.ApproverTwoId
+    FROM ApprovalTask_aarti at
+    INNER JOIN EmployeeMaster_arti em ON at.EmployeeId = em.EmployeeId
+    WHERE em.ApproverId = em.ApproverTwoId
+      AND at.ApprovalStatus IN ('Approved', 'Unassigned');
+ 
+    -- Delete records with approved status where there is another record with unassigned status
+    DELETE FROM ApprovalTask_aarti
+    WHERE ApprovalStatus = 'Approved'
+      AND EXISTS (
+        SELECT 1
+        FROM ApprovalTask_aarti app
+        WHERE ApprovalTask_aarti.EmployeeId = app.EmployeeId
+          AND app.ApproverId = ApprovalTask_aarti.ApproverId
+          AND app.ApprovalStatus = 'Unassigned'
+    );
+ 
+    -- Drop temporary table
+    DROP TABLE #TempData;
+END
+
+
+
+exec [dbo].[DeleteRecordsForDuplicateApproversD]

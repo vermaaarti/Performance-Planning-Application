@@ -24,7 +24,8 @@ namespace AADTask.Models
 
 
         public string? approver { get; set; }
-
+       
+         public string? approverTwo { get; set; }
 
         public string? performanceChallenges { get; set; }
      
@@ -34,14 +35,12 @@ namespace AADTask.Models
 
       public int ApprovalTaskId  { get; set; }
          public int ApproverId { get; set; }
+
+         public int ApproverTwoId { get; set; }
       public string? ApproverName { get; set; }
         public int PlannerId { get; set; }
          public string? ApprovalStatus { get; set; }
         public string? CreatedOn { get; set; }
-
-
-      
-
 
 
     }
@@ -79,11 +78,16 @@ namespace AADTask.Models
 
     public enum Approvr
     {
-        Ruchir,
+        
         Chandan,
-        Rachana
+        Himanshu
+    }
+    public enum ApprovrTwo
+    {
+        Chandan,
+        Himanshu
     }
 
-    
+
 
 }
