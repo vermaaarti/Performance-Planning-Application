@@ -50,6 +50,7 @@ Performance Approver(Approver Page)
   6. Approver will be able to see the 'Send Back' button which will change the approveStatus from 'Assigned'(default) to 'Unassigned' and the statusOfPlanning to 'draft' from 'InProgress' from the EmployeeMaster Table.
 
 
+
  In this application there are two different approvers:-
  
  Based on this approvers four possibilities are there
@@ -61,9 +62,21 @@ Performance Approver(Approver Page)
  4. There can be only A approver or only B approver as both approver for the employees.
 
 
+
+
  Challenges I have faced while creating this application:-
 
  1. To show employee records when both the approvers are same.
  2. To show employee records when first approver has approved and it is assigned to second approver.
-    
+
+
+
+ Unique features present in this application:-
+ 1. Dynamic planner-name binding in the approver page.
+ 2. Dynamic employee record binding based on planner name.
+ 3. Default planner based data binding for employees record.
+ 4. employee record will be assigned to second approver only when the first approver has approved it.
+ 5. When both approver are same the record will be assigned to the same approver and approval process will take two step.
+ 6. If first/second approver has rejected the employee planning then planner will have to plan the employees again.
+
      
