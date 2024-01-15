@@ -6,8 +6,9 @@ A .net MVC application to plan/track/approve/ReApprove the performance of employ
 How It Works :
 
 
-In performance Planning Application, there are multiple roles. First role is "Admin", Admin can see all employees data, Second Role in "Planner", Planner can see only the employees for whom he is planner and the Third role is "Approver", Approver can see the employees for whom he is approver. 
-The first step is login, based on login employee data gets printed in the screen and based on admin/planner/approver, you can see different button to perform various operations.
+In performance Planning Application, there are multiple roles. First role is "Admin", Admin can see all employees data, Second Role is "Planner", Planner can see only the employees for whom he is a planner and the Third role is "Approver", Approver can see the employees for whom he is an approver. There are two approvers in the application. And based on their level of approval, they can approve or send-back(reject) the employees. If the employees are send-back, we will have to again plan the employees, else if approver approves, employees planning and approval process gets completed.
+
+In this application, the first step is login, based on login employee data gets printed on the screen and based on admin/planner/approver, you can see different button to perform various operations.
 
 
 Authentication : Azure AD Authentication
@@ -23,7 +24,7 @@ Employee Master(Admin Page)
   3. It has a list of employees with columns : EmployeeName(hyperlink), Email, ManagerName, Department, PlannerName, Performance Challenge(Input type dropdown : "Training Required", "Was/Is in PIP" , "No certification", "No challenges"), Performance Rating(Input type dropdown : Poor, Satisfactory,Good, Excellent), 
   "Status", StatusOfPlanning etc.
   4. There is a button at the top "Add new employee" with which a new page will open to add a new employee. Mandatory fields are : EmployeeName, Manager(Dropdown), Department(Dropdown),    Planner(Dropdown), Approver(Dropdown)
-  5. EmployeeName hyperlink will open the same page with values binded. Fields will be editable only upto when that particular employee performance status is "Draft".
+  5. EmployeeName hyperlink will open the same page with values binded. Fields will be editable only upto when that particular employee performance status is "draft".
   6. Both admins and planners can see "Save As Draft" button, which will enable them to save changes(Performance Rating) of employees.
 
 
@@ -48,3 +49,21 @@ Performance Approver(Approver Page)
   5. When the status gets 'Approved' the approver should not be able to see the record of employee's.
   6. Approver will be able to see the 'Send Back' button which will change the approveStatus from 'Assigned'(default) to 'Unassigned' and the statusOfPlanning to 'draft' from 'InProgress' from the EmployeeMaster Table.
 
+
+ In this application there are two different approvers:-
+ 
+ Based on this approvers four possibilities are there
+ Suppose we have two approvers, approver A and approver B
+ 
+ 1. There can be only A approver for the employees.
+ 2. There can be only B approver for the employees.
+ 3. There can be both A and B approvers for the employees.
+ 4. There can be only A approver or only B approver as both approver for the employees.
+
+
+ Challenges I have faced while creating this application:-
+
+ 1. To show employee records when both the approvers are same.
+ 2. To show employee records when first approver has approved and it is assigned to second approver.
+    
+     
